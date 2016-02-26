@@ -1,0 +1,222 @@
+%
+% PROJECT: <ETD> Electronic Thesis and Dissertation Initiative
+%   TITLE: LaTeX report template for ETDs in LaTeX
+%  AUTHOR: Neill Kipp, nkipp@vt.edu
+%     URL: http://etd.vt.edu/latex/
+% SAVE AS: etd.tex
+% REVISED: September 6, 1997 [GMc 8/30/10]
+% 
+
+% Instructions: Remove the data from this document and replace it with your own,
+% keeping the style and formatting information intact.  More instructions
+% appear on the Web site listed above.
+
+\documentclass[12pt,dvips]{report}
+
+\setlength{\textwidth}{6.5in}
+\setlength{\textheight}{8.5in}
+\setlength{\evensidemargin}{0in}
+\setlength{\oddsidemargin}{0in}
+\setlength{\topmargin}{0in}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.1in}
+
+% Uncomment for double-spaced document.
+% \renewcommand{\baselinestretch}{2}
+
+% \usepackage{epsf}
+
+\begin{document}
+
+\thispagestyle{empty}
+\pagenumbering{roman}
+\begin{center}
+
+% TITLE
+{\Large 
+Looks Good to Me (LGTM): 
+Authentication for Augmented Reality Using Wireless Localization and Facial Recognition
+}
+
+\vfill
+
+Ethan D. Gaebel
+
+\vfill
+
+Thesis submitted to the Faculty of the \\
+Virginia Polytechnic Institute and State University \\
+in partial fulfillment of the requirements for the degree of
+
+\vfill
+
+Master of Science \\
+in \\
+Computer Science and Applications
+
+\vfill
+
+Wenjing Lou, Committee Chair \\
+Ing-Ray Chen \\
+Guoqiang Yu 
+
+\vfill
+
+May 15, 2016 \\
+Falls Church, Virginia
+
+\vfill
+
+Keywords: 
+\\
+Copyright 2016, Ethan D. Gaebel
+
+\end{center}
+
+\pagebreak
+
+\thispagestyle{empty}
+\begin{center}
+
+{\large Looks Good to Me (LGTM): 
+Authentication for Augmented Reality Using Wireless Localization and Facial Recognition}
+
+\vfill
+
+Ethan D. Gaebel
+
+\vfill
+
+(ABSTRACT)
+
+\vfill
+
+\end{center}
+
+Security-based abstract and stuff!!!
+
+\vfill
+
+% GRANT INFORMATION
+This work was supported in part by the National Science Foundation under Grants 
+CNS-1443889, CNS-1405747, CNS-1446478, and CNS-1343222.
+
+\pagebreak
+
+% Dedication and Acknowledgments are both optional
+% \chapter*{Dedication}
+% \chapter*{Acknowledgments}
+
+\tableofcontents
+\pagebreak
+
+\listoffigures
+\pagebreak
+
+\listoftables
+\pagebreak
+
+\pagenumbering{arabic}
+\pagestyle{myheadings}
+
+%%%%%%%%%%%%%%%%%
+\chapter{Introduction}
+\markright{Ethan D. Gaebel \hfill Chapter 1. Introduction \hfill}
+
+%%%%%%%%%%%%%%%%%
+\chapter{Protocol Design}
+% System Model
+% (Security) Objectives
+% ----Bootstrapping authentication
+% ----Selection problem
+% Threat Model
+% Protocol, high level
+% Protocol, specific (Alice receives $n$ packets, etc...)
+% Protocol Analysis
+% ---- Describe each step of the protocol
+% ---- Security
+% ---- Usability
+
+%%%%%%%%%%%%%%%%%
+\chapter{Lit Review?}
+% Device Pairing
+% ---- Difficulty of bootstrapping authentication
+% ---- Man-in-the-middle
+% ---- Evil twin
+% ---- Difficulty of pairing over wireless channel 
+% Wireless localization
+% ---- Discuss past localization techniques, BRIEFLY
+% ---- Discuss lack of focus on point-to-point localization
+% ---- Discuss new protocols that enable point-to-point localization in commodity hardware
+% Facial Recognition
+% ---- Very brief discussion of techniques, the area is well studied and my techniques are not new
+
+%%%%%%%%%%%%%%%%%
+\chapter{Implementation}
+% General setup
+% ---- AR headsets unavailable (expensive, not powerful enough yet, not flexible enough yet)
+% ---- SpotFi
+% ---- OpenCV
+% -------- Fisherfaces, Haarcascade, etc
+% ---- Laptops with webcams and three antennas each
+% Intel 5300 firmware etc
+% System and Validation
+% ----Explain each implementation decision, why and how, discuss alternatives
+% ???? ---- Maybe the lit review should go here ---- ????
+% Detailed hardware descriptions
+
+%%%%%%%%%%%%%%%%%
+\chapter{Experiment}
+% Experiments (Very formal)
+% ----Security
+% ----Performance
+% ----Usability
+% Results
+% Discussion
+
+%%%%%%%%%%%%%%%%%
+\chapter{Conclusion}
+% List of points to hit on:
+% ---- Oldness and difficulty of device pairing
+% ---- Usability's impact on security
+% ---- Ease of use of LGTM
+% ---- Point-to-point communication providing privacy
+% ---- Something optimistic and feel-good sounding about the future
+
+%%%%%%%%%%%%%%%%%
+%
+% Include an EPS figure with this command:
+%   \epsffile{filename.eps}
+%
+
+%%%%%%%%%%%%%%%%
+%
+% Do tables like this:
+
+% \begin{table}
+% \caption{The Graduate School wants captions above the tables.}
+% \begin{center}
+%  \begin{tabular}{ccc}
+%  x & 1 & 2 \\ \hline
+%  1 & 1 & 2 \\
+%  2 & 2 & 4 \\ \hline
+%  \end{tabular}
+% \end{center}
+% \end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% If you are using BibTeX, uncomment the following:
+% \thebibliography
+%
+% Otherwise, uncomment the following:
+% \chapter*{Bibliography}
+
+% \appendix
+
+% In LaTeX, each appendix is a "chapter"
+% \chapter{Program Source}
+
+
+\end{document}
