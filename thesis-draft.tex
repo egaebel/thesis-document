@@ -1,15 +1,9 @@
 %
-% PROJECT: <ETD> Electronic Thesis and Dissertation Initiative
-%   TITLE: LaTeX report template for ETDs in LaTeX
-%  AUTHOR: Neill Kipp, nkipp@vt.edu
-%     URL: http://etd.vt.edu/latex/
-% SAVE AS: etd.tex
-% REVISED: September 6, 1997 [GMc 8/30/10]
+% PROJECT: <ETD> Electronic Thesis
+%   TITLE: Looks Good to Me (LGTM): Authentication for Augmented Reality
+%  AUTHOR: Ethan Gaebel
+% SAVE AS: thesis-draft.tex
 % 
-
-% Instructions: Remove the data from this document and replace it with your own,
-% keeping the style and formatting information intact.  More instructions
-% appear on the Web site listed above.
 
 \documentclass[12pt,dvips]{report}
 
@@ -123,57 +117,86 @@ CNS-1443889, CNS-1405747, CNS-1446478, and CNS-1343222.
 %%%%%%%%%%%%%%%%%
 \chapter{Introduction}
 \markright{Ethan D. Gaebel \hfill Chapter 1. Introduction \hfill}
+% Augmented Reality
+% ---- Convince readers it is the future
+% ---- Discuss options for AR: headsets, hardware included, etc
+% ---- Augmented reality NEEDS a device pairing mechanism
+% Device Pairing
+% ---- Difficulty of bootstrapping authentication
+% ---- Man-in-the-middle (MOVE)
+% ---- Evil twin (MOVE)
+% ---- Difficulty of pairing over wireless channel 
+% ---- Usability's importance to security in practice
+% ---- Pin currently dominant method
+% ---- Long history, briefly summarize to illustrate the breadth of techniques investigated
+% ---- Mention centralized device pairing methods.... (this is kind of out of the purview of device pairing; a user account can be used to bootstrap?)
+% Augmented reality needs device pairing
+% ---- Sharing holograms, etc
+% ---- Improved hardware and user interface provides avenue for BETTER device pairing (better = more usable --> more secure)
+% -------- Must be more usable than a pin
+
+
+% (TO BE ASSIGNED TO A CHAPTER)
+% High level description of LGTM from the user perspective (high level even for the user view)
+% ---- Press button, look at other person, etc
+% ---- Compare EM waves & sound waves for localization & information carrying purposes
+% ---- How does this look formally? (transition)
+
 
 %%%%%%%%%%%%%%%%%
 \chapter{Protocol Design}
 % System Model
+% ---- Protocol hardware requirements
 % (Security) Objectives
 % ----Bootstrapping authentication
 % ----Selection problem
+% ----Privacy objectives (No need for centralized power knowing communication/content patterns)
 % Threat Model
+% ---- Wireless attacker model
 % Protocol, high level
+% Protocol Figure
 % Protocol, specific (Alice receives $n$ packets, etc...)
 % Protocol Analysis
 % ---- Describe each step of the protocol
 % ---- Security
+% -------- Attacker ability is based on the quality of the facial recognition & wireless localization
+% -------- "Attack space"
+%
 % ---- Usability
-
-%%%%%%%%%%%%%%%%%
-\chapter{Lit Review?}
-% Device Pairing
-% ---- Difficulty of bootstrapping authentication
-% ---- Man-in-the-middle
-% ---- Evil twin
-% ---- Difficulty of pairing over wireless channel 
-% Wireless localization
-% ---- Discuss past localization techniques, BRIEFLY
-% ---- Discuss lack of focus on point-to-point localization
-% ---- Discuss new protocols that enable point-to-point localization in commodity hardware
-% Facial Recognition
-% ---- Very brief discussion of techniques, the area is well studied and my techniques are not new
 
 %%%%%%%%%%%%%%%%%
 \chapter{Implementation}
 % General setup
 % ---- AR headsets unavailable (expensive, not powerful enough yet, not flexible enough yet)
+% ---- Necessary components from AR headsets for experimental purposes (Wireless, webcam, display)
+% Wireless Localization Discussion
+% ---- Discuss past localization techniques, BRIEFLY
+% ---- Discuss lack of focus on point-to-point localization
+% ---- Discuss new protocols that enable point-to-point localization in commodity hardware
+% Facial Recognition Discussion
+% ---- Very brief discussion of techniques, the area is well studied and my techniques are not new
+% Specific Wireless localization and facial recognition methods
 % ---- SpotFi
 % ---- OpenCV
 % -------- Fisherfaces, Haarcascade, etc
+% Specific localization & facial recognition components
+% ---- Intel 5300 firmware etc
 % ---- Laptops with webcams and three antennas each
-% Intel 5300 firmware etc
 % System and Validation
-% ----Explain each implementation decision, why and how, discuss alternatives
-% ???? ---- Maybe the lit review should go here ---- ????
-% Detailed hardware descriptions
+% ---- Glue code, system structuring, specifics of protocol implementation
+% ---- Explain each implementation decision, why and how, discuss alternatives
+% ---- This section should mainly discuss why certain things were NOT done, why things ARE done 
+% -------- belongs under "General Setup"
 
 %%%%%%%%%%%%%%%%%
 \chapter{Experiment}
 % Experiments (Very formal)
 % ----Security
 % ----Performance
-% ----Usability
-% Results
-% Discussion
+% ----SpotFi Accuracy
+% ----Facial recognition accuracy
+% Results (for each above)
+% Discussion (for each above)
 
 %%%%%%%%%%%%%%%%%
 \chapter{Conclusion}
