@@ -143,6 +143,10 @@ CNS-1443889, CNS-1405747, CNS-1446478, and CNS-1343222.
 % Augmented reality can have BETTER device pairing
 % ---- Improved hardware and user interface provides avenue for BETTER device pairing (better = more usable --> more secure)
 % -------- Must be more usable than a pin
+% High level description of LGTM from the user perspective (high level even for the user view)
+% ---- Press button, look at other person, etc
+% ---- Compare EM waves & sound waves for localization & information carrying purposes
+% ---- How does this look formally? (transition)
 Augmented reality is one of the most exciting new technologies on the horizon, promising three dimensional interfaces that one or more users can directly interact with. Augmented reality is most commonly provided via a head mounted display with translucent lenses that serve as a display where three dimensional digital objects can be rendered on top of the real world. These head mounted displays are usually full stand-alone computers equipped with powerful processors and graphics processors, wireless communications chipsets, one or more high resolution cameras, and depth sensors. Head mounted displays require much of this sophisticated technology to provide fully interactive augmented reality which, at a minimum, requires: environment mapping, hand tracking, graphics processing, and wireless communication, since connectivity is a requirement for any device today. 
 Users of augmented reality headsets have the same need that users of any other electronic device have today: the need to send content to others. But in the case of augmented reality this content will usually be far richer, and larger, than we've seen on other platforms, since users will be creating, viewing, and working with three dimensional objects, which inherently have more information associated with them than their equivalent two dimensional representations. It is also likely that users will want to share content face-to-face, providing 3D objects that both users can see and/or interact with; I'm sure most smart phone users have looked up a video or picture to show someone before. In fact, I think that we can expect this type of sharing to increase with augmented reality so that users are sharing app interfaces, sharing group photos in real-time, and passing secret three dimensional jokes back and forth all the time.
 This content sharing between users in close proximity is an interesting problem. Typical content sharing schemes today take advantage of pre-existing infrastructure via cell towers, wireless access points, and the Internet. This makes very good sense considering the most common use-case for digitally sharing content is to share it with those who aren't present; you wouldn't send someone standing next to you a YouTube video. But with augmented reality you would send someone sitting next to you a YouTube video so that the two of you can watch it together through your respective headsets. Since this type of sharing will be so pronounced I think it deserves separate consideration from the general content sharing problem, which is why I think that point-to-point wireless communication should be used for such content sharing. By sharing content directly from person to person network resources are saved, money may be saved if charge-by-data-usage plans are being used for Internet access, person-to-person content sharing is robust in the face of local or global infrastructure failures, and content sharing privacy details, such as who is communicating with who, what is being communicated, and when the communication is occurring, are kept between the two users doing the sharing instead of being shared with whatever entity (or entities) is (are) providing the service. 
@@ -150,67 +154,140 @@ There are many options for point-to-point wireless communication but a full disc
 When working in a point-to-point wireless communications scenario authentication can be tricky. It will often be the case that two users have not used their devices to communicate before, so there will be no pre-existing security context (such as a pin, key, token, etc) between the two devices. 
 Device pairing is the area dedicated to authenticating devices without prior security context, and there have been many schemes introduced to address this problem on devices with myriad hardware features and constraints. To give a quick idea of the breadth of the techniques proposed, some schemes have involved: screens with changing bar codes, infrared communication, blinking lights, communicating cryptographic keys using speakers and microphones, and numerical pin entry. All of these methods rely on communication over one or more out-of-band channels, which is a channel using human sensory capabilities to authenticate other communication channels which are imperceptible to humans, which is usually the wireless channel. To authenticate the human imperceptible channel some key is transmitted over the out-of-band channel which is then used for authentication. The simplest, and most common, example is that of a numerical pin. A pin may be permanently bound to a device without a user interface and the user enters the pin into another device with a user interface to perform authentication; this is the case with Bluetooth headsets.
 These out-of-band channels explicitly require a human to participate, and it may be expected that the human actor has some impact on the security of the scheme as a result. This intuition has been validated in $[CITATIONS]$ where comparative user studies were conducted between several different device pairing techniques. In $[CITATION--Usability Analysis of Secure Device Pairing Methods]$ two rounds of usability tests were performed for two different methods: compare-and-confirm and select-and-confirm, where users had to compare a randomly generated pin presented on each device for equality and confirm if they matched and select a pin from a list on one device sent to it from the first device and confirm if they matched, respectively. Each method was measured by fatal error rate and total user error rate, where a fatal error is an error that results in a security breach and total user error is all the fatal errors combined with all errors that do not result in a security breach (only user annoyance). The two rounds of usability tests differed in the user interface the study participants used, while also being performed on different users. In the first round compare-and-confirm had a fatal error rate of $20\%$ and select-and-confirm had a fatal error rate of $12.5\%$, while compare-and-confirm had a $20\%$ total error rate and select-and-confirm had a $20\%$ total error rate. The researchers suspected that the user interface could be the problem and so improved the interfaces as well as lengthening the pins from 4 numbers to 6 numbers, the idea being that a longer pin will force the user to focus more on the task making them less likely to make a mistake. In the second round compare-and-confirm had a fatal error rate of $0\%$ and select-and-confirm had a fatal error rate of $5\%$, while compare-and-confirm had a $2.5\%$ total error rate and select-and-confirm had a $7.5\%$ total error rate. So we see that these results mirror our intuition regarding usability's effect on the security of device pairing schemes. Furthermore, making authentication easier for the user is a worthy goal in-of-itself. A hallmark of technology in general has been making certain things easier for the masses, so it should be with security technology. 
-Augmented reality presents a new computing platform with many hardware features as a requirement that have not been previously seen on consumer devices. These hardware features present an opportunity for a better device pairing scheme that is both more secure and more usable. Think of how two people who have never met before authenticate one another while speaking. Sound waves are localized and paired with the face we see at the point of localization. Afterwards we know the sound of the person's voice and can recognize it without seeing them. Can we do something similar with the hardware available in an augmented reality headset? Yes. We can localize the wireless signal and overlay it on reality for the user to view, and use facial recognition to locate a face fitting a model transmitted to our device and overlay a box around the face recognized in the current frame, then the user can verify on the digital overlay over reality that the wireless signal is emanating from the person we would like to communicate with. If the user finds that the person our device recognizes is who they want to communicate with and that the wireless signal is indeed coming from them, the user can say to themselves ``looks good to me!'' and indicate that the other user has been authenticated. This is the basic view of how my system works that the users will interact with, but lets move on to the next section to formalize this protocol and everything that happens under the hood.
-
-% (TO BE ASSIGNED TO A CHAPTER)
-% High level description of LGTM from the user perspective (high level even for the user view)
-% ---- Press button, look at other person, etc
-% ---- Compare EM waves & sound waves for localization & information carrying purposes
-% ---- How does this look formally? (transition)
+Augmented reality presents a new computing platform with many hardware features as a requirement that have not been previously seen on consumer devices. These hardware features present an opportunity for a better device pairing scheme that is both more secure and more usable. Think of how two people who have never met before authenticate one another while speaking. Sound waves are localized and paired with the face we see at the point of localization. Afterwards we know the sound of the person's voice and can recognize it without seeing them. Can we do something similar with the hardware available in an augmented reality headset? Yes. We can localize the wireless signal and digitally overlay its location with a box or other type of indicator on reality for the user to view, and use facial recognition to locate a face fitting a model transmitted to our device and overlay a box around the face recognized in the current frame. The user can then verify on the digital overlay that the wireless signal is emanating from the person we would like to communicate with. If the user finds that the person our device recognizes is who they want to communicate with and that the wireless signal is indeed coming from them, the user can say to themselves ``looks good to me!'' and indicate that the other user has been authenticated. This is the basic view of how my system will work from the user's perspective, but lets move on to the next section to formalize this protocol and everything that happens under the hood.
 
 
 %%%%%%%%%%%%%%%%%
 \chapter{Protocol Design}
+\section{System Model}
 % System Model
 % ---- Protocol hardware requirements
+% -------- Users have augmented reality head mounted displays equipped with:
+%               wireless communications, support for point-to-point 
+%               communications, high resolution cameras, relatively good 
+%               computational abilities, and translucent screens very close to 
+%               the eye such that only the user can reasonably see them which 
+%               are capable of rendering 2D and 3D objects on top of the 
+%               physical world which the user is already seeing.
+% ---- Users are present, in-person/face-to-face, and would like to establish 
+%           communication to share some kind of content between their devices 
+%           which may include: a shared app experience, watching a video, 
+%           listening to the same music, shared holograms, basic messaging
+% ---- Users of LGTM have no prior security context with regard to their 
+%           devices; the users may be friends, acquaintances or strangers.
+% ---- Each user possesses, in the memory of their augmented reality headsets, 
+%           facial recognition models for themselves.
+% -------- These are easily trained via mirror.
+% ---- No assumptions regarding access to the Internet are made.
+First we must adequately understand the scenarios where LGTM is applicable. This requires us to go down the list of: hardware requirements, security context, the users' context, and any other assumptions made. 
+LGTM is specifically designed for authenticating two users, Alice and Bob.
+% however it is simple to extend this scheme to multiple users by allowing Alice and Bob to individually perform authentication while the other party participates in the final approval (but not the full protocol itself).
+LGTM assumes that users are equipped with head mounted augmented reality rigs each of which posses: wireless communications hardware with support for point-to-point communication protocols, a high definition video camera, and a translucent display directly in front of the users' eyes that is capable of displaying digital objects on top of the physical world (this last requirement is satisfied simply by the users possessing head mounted augmented reality rigs, but we want to be thorough). 
+The two hardware devices are assumed to have no prior security context, which means the two devices do not possess any information which can be used to prove the authenticity of their claimed identity to the other. A pre-shared key is a common example of a piece of information which can be used as preexisting security context.
+An important piece of information that each headset is assumed to possess however is a facial recognition model capable of recognizing the user of the headset. That is, Alice's headset has a facial recognition model which can recognize her and Bob's headset has a facial recognition model which can recognize him. Training for these models can be done easily in a mirror.
+As for the users themselves, Alice and Bob are assumed to be in sight of each other and would like to share some sort of digital content with one another such as: a shared application experience, a shared video, shared music, shared holograms, or basic messaging. No assumptions are made of Alice and Bob's relationship with each other: they may be friends, acquaintances or strangers.
+No assumptions regarding access to the Internet are made. 
+
+\section{Security Objectives}
 % (Security) Objectives
-% ----Bootstrapping authentication
-% ----Selection problem
-% ----Privacy objectives (No need for centralized power knowing communication/content patterns)
+% ---- Authenticate the wireless signal of one user so that secure 
+%           communication can be done between two individuals
+% -------- Bootstrapping authentication
+% ---- Select a user-wireless signal pair to communicate with
+% -------- Selection problem
+% ---- Privacy Objectives (sub-section under security objectives...)
+% -------- No need for centralized power knowing communication/content patterns
+% -------- Intermediary parties facilitating communication is 0
+% ------------ The potential for remote eavesdropping, censorship, tracking, 
+%                   etc, is non-existent
+The primary security objective is for Alice and Bob to correctly authenticate one another's wireless signals so that they can engage in secure point-to-point wireless communication. Recall from the system model section that Alice and Bob do not share any security context, so this authentication must be bootstrapped. 
+A secondary objective is for Alice and Bob to correctly select which (user, wireless signal) pair they want to communicate with. This objective is directly related to the first but we feel it warrants distinction as a tricky problem in its own merit since there are many practical attacks which rely upon tricking users into selecting the wrong thing $[CITATIONS, DIVERSE ONES]$.
+There is a final security objective which is perhaps more accurately described as a privacy objective, which is a subset of security. That objective is for there to be a guarantee that no outside parties are aware of the communication or content patterns present for any user of LGTM. Specifically, this means that it is not possible for an outside entity, one not directly engaging with Alice, to determine who she communicates with or what she communicates. 
+
+\section{Threat Model}
 % Threat Model
+Attackers have quite a bit of power when dealing with a wireless channel since the communications medium is both public and localized. Attackers have the capability to: jam communications, perform denial of service attacks by flooding the channel with packets constructed to fit the protocol, eavesdrop on all packets transmitted, and replay packets collected from eavesdropping in any order. Further, the attacker may have multiple transceivers and their disposal, so attacks can be coordinated between more than one node.
+Attackers may use these capabilities to accomplish one or several goals. An attacker may want to impersonate Alice to send Bob falsified content. An attacker may want to impersonate both Alice and Bob to perform a man-in-the-middle attack allowing them to eavesdrop on encrypted communications between Alice and Bob. The attacker may simply want to prevent communication between Alice and Bob. Or the attacker may want to do any of the above steps with the higher goal of exploiting some subsystem.
 % ---- Wireless attacker model
-% Protocol, high level
+
+\section{Protocol}
+% Protocol, high level (high-level, as in the protocol diagram)
+
 % Protocol Figure
+
 % Protocol, specific (Alice receives $n$ packets, etc...)
+
+\section{Analysis}
 % Protocol Analysis
-% ---- Describe each step of the protocol
-% ---- Security
-% -------- Attacker ability is based on the quality of the facial recognition & wireless localization
-% -------- "Attack space"
-%
-% ---- Usability
+% ---- Describe each step of the protocol (protocol specific above?)
+\subsection{Security}
+% Security
+% ---- Wireless attacks
+% -------- Jamming 
+% ------------ Works on any wireless pairing technique
+% -------- DOS, spam the user(s) with auth requests 
+% ------------ Works on any wireless pairing technique
+% -------- Man-in-the-middle
+% ------------ Works on any wireless pairing technique
+% ------------ Wait...the feasibility depends on the quality of the wireless 
+%                   localization. In a perfect implementation, this won't work.
+% ---- Attacker ability is based on the quality of the facial recognition 
+%           & wireless localization (correctness)
+% -------- "Attack space" for wireless localization
+% ---- Why not a pin?
+\subsection{Usability}
+% Usability
+% ---- Why not a pin?
+% -------- Greater range; you can see farther than you can hear
+% -------- Will not work in loud environments
+% -------- Will not work for the deaf (LGTM won't work for the blind, but 
+%                   neither will AR in general, and neither will a pin)
+% -------- Depending on implementation, may be less secure, overhearing 
+%                   pin can be a security leak
+\subsection{Privacy}
+% ---- Privacy
+
+\subsection{Potential Alterations}  % Should this section be here?
+% Expanding to the group case
+% One way sharing: (I.E. Alice receives content from Bob, but not vice-versa)
 
 %%%%%%%%%%%%%%%%%
 \chapter{Implementation}
 % General setup
-% ---- AR headsets unavailable (expensive, not powerful enough yet, not flexible enough yet)
-% ---- Necessary components from AR headsets for experimental purposes (Wireless, webcam, display)
+% ---- AR headsets unavailable (expensive, not powerful enough yet, not 
+%           flexible enough yet)
+% ---- Necessary components from AR headsets for experimental purposes (
+%           Wireless, video camera, display)
 % Wireless Localization Discussion
 % ---- Discuss past localization techniques, BRIEFLY
 % ---- Discuss lack of focus on point-to-point localization
-% ---- Discuss new protocols that enable point-to-point localization in commodity hardware
+% ---- Discuss new protocols that enable point-to-point localization in 
+%           commodity hardware
 % Facial Recognition Discussion
-% ---- Very brief discussion of techniques, the area is well studied and my techniques are not new
+% ---- Very brief discussion of techniques, the area is well studied and my 
+%           techniques are not new
 % Specific Wireless localization and facial recognition methods
 % ---- SpotFi
 % ---- OpenCV
-% -------- Fisherfaces, Haarcascade, etc
+% -------- Fisherfaces, LBPH, Haarcascade, etc
 % Specific localization & facial recognition components
 % ---- Intel 5300 firmware etc
-% ---- Laptops with webcams and three antennas each
+% ---- Laptops with web cams and three antennas each
 % System and Validation
 % ---- Glue code, system structuring, specifics of protocol implementation
 % ---- Explain each implementation decision, why and how, discuss alternatives
-% ---- This section should mainly discuss why certain things were NOT done, why things ARE done 
+% ---- This section should mainly discuss why certain things were NOT done, 
+%           and why things ARE done 
 % -------- belongs under "General Setup"
 
 %%%%%%%%%%%%%%%%%
 \chapter{Experiment}
 % Experiments (Very formal)
-% ----Security
-% ----Performance
-% ----SpotFi Accuracy
-% ----Facial recognition accuracy
+% ---- Security
+% ---- Performance
+% ---- SpotFi Accuracy
+% -------- Effective "attack space"
+% ---- Facial recognition accuracy
 % Results (for each above)
 % Discussion (for each above)
 
