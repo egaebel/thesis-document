@@ -233,14 +233,12 @@ Attackers may use these capabilities to accomplish one or several goals. An atta
 
 \section{Protocol}
 % Protocol, high level (high-level, as in the protocol diagram)
-Consider Alice and Bob to be person-device tuples; that is, Alice and Bob are people wearing augmented reality head-mounted displays equipped with wireless communications, high-definition cameras, and translucent displays very close to their eyes. Alice and Bob meet in person and would like to establish communication, but they have never communicated on these devices, so they have no pre-existing security context. Alice and Bob both initiate the pairing protocol on their respective devices via a button which may be physical or digitally rendered. Alice and Bob generate new public key-private key pairs, and each broadcast their public keys, unencrypted, into the wireless channel. Bob encrypts a facial recognition model to recognize his own face with Alice's public key and sends it. Alice decrypts Bob's message to retrieve his facial recognition parameters and also saves the channel state information retrieved from her wireless card for the packets holding Bob's facial recognition parameters. Alice encrypts facial recognition parameters for her own face using Bob's public key and sends the result. Bob receives Alice's encrypted facial recognition parameters and decrypts them to retrieve them while also saving the channel state information collected from Bob's wireless card for the packets holding Alice's facial recognition parameters. Alice computes Bob's location using the channel state information and displays the location on Alice's translucent display in the form of a circle (to include some error tolerance). Alice also runs a facial recognition algorithm using Bob's transmitted facial recognition parameters to identify any faces which match Bob's. If any faces are recognized a box is displayed around the face on Alice's translucent display. It is checked if there is an overlap between the box around Bob's face and the circle around Bob's computed signal transmission location. If there is an overlap between the two areas, then Alice is prompted to confirm whether the correct person has been identified. Bob performs the same steps, computing the location of Alice's signal origin, running a facial recognition algorithm using Alice's transmitted parameters, checking for overlap of the two, and being prompted to confirm that the intended recipient, Alice, has been selected.
-
-Alice and Bob have now authenticated each others' wireless signals and can perform some key exchange protocol (like Diffie-Hellman) to begin encrypted communication.
+Alice and Bob are two individuals wearing augmented reality headsets equipped with a high-definition camera, point-to-point wireless communication abilities, and computational ability equal to the average laptop computer. Alice presses a button, which may be holographic or physical, and begins listening. Bob presses a button as well which opens his headset up to listening and also sends an initialization packet to Alice with his network identification, a random nonce, a public key, and some initialization text. Alice receives this message and responds by transmitting her public key and a nonce encrypted with Bob's public key. Alice and Bob both generate a session key using $nonce_A$ and $nonce_B$ which both parties now possess. Bob encrypts facial recognition parameters and a cryptographic hash of all messages sent between Alice and Bob using the shared session key and broadcasts this. Alice receives Bob's message, decrypts Bob's facial recognition parameters verifies the included hash of all prior messages, and extracts channel state information from the wireless signal carrying the facial recognition parameters. Alice responds by encrypting facial recognition parameters to recognize herself with a cryptographic hash of all their previous messages concatenated using their shared session key. Bob receives Alice's encrypted facial recognition parameters, decrypts them, verifies the concatenated hash, and extracts channel state information from the wireless signal which carried the facial recognition parameters. Now, Alice and Bob each run localization algorithms using the channel state information as input and locate the origin of the signal sources. Then, Alice and Bob run facial recognition algorithms using the facial recognition parameters they received from each other and locate each other's faces (if they are currently in each other's field of view). It is expected that in practice Alice and Bob will receive many of these correspondences, so the protocol automatically tosses out any facial recognition-signal location pairs where the signal location is not overlapping with the face position. I say overlap, because in practice there will be an error tolerance on the signal location, so rather than a single point, there will be a sphere where the signal may have originated from. Invalid pairs of wireless signals and facial recognition parameters having been thrown out, Alice sees a square drawn around Bob's face on the augmented reality headset screen and Bob similarly sees a square drawn around Alice's face on the augmented reality headset screen. They are both prompted to accept or reject the face selected by the protocol. If they both accept, Alice and Bob begin communicating normally using a channel encrypted with their shared session key. \\
 
 % Protocol Figure
 \begin{figure}
 \center
-\includegraphics[scale=0.6]{figures/looks-good-to-me-protocol-diagram--no-legend.pdf}
+\includegraphics[scale=0.6]{../figures/looks-good-to-me-protocol-diagram--no-legend.pdf}
 \caption{Looks good to me protocol diagram...}
 \label{protocol-diagram}
 \end{figure}
@@ -250,6 +248,15 @@ Alice and Bob have now authenticated each others' wireless signals and can perfo
 \section{Analysis}
 % Protocol Analysis
 % ---- Describe each step of the protocol (protocol specific above?)
+The LGTM protocol uses many different techniques to bootstrap authenticated communications between two users. Here I will go into some detail as to why each of these techniques was included. \\
+
+Symmetric key encryption is bootstrapped from asymmetric key encryption in the first few messages. This is done in the usual way and is very similar to other protocols $[CITATIONS]$. Hash based message authentication codes are used to authenticate messages as belonging to a single user. \\
+
+The security of LGTM mostly relies upon wireless localization. A user can successfully authenticate another user by comparing the location obtained via wireless localization and comparing it to the location of the user they're attempting to authenticate. \\
+
+Facial recognition is used to boost usability. Humans are excellent at recognizing other humans faces. Infants as young as <LOOK UP> $[CITATION]$ have shown the ability to distinguish between different faces. Using intuition gleaned from this, I have decided to incorporate facial recognition into this scheme so that users need only look at a face and confirm it to authenticate. This is an easier task than identifying whether a particular person's head overlaps with a sphere. The usability of a security scheme, specifically pairing, has been found to directly affect the actual security of a scheme, since user error resulting from unfriendly user interfaces can result in security issues occurring.
+
+
 \subsection{Security}
 % Security
 % ---- Wireless attacks
@@ -265,6 +272,22 @@ Alice and Bob have now authenticated each others' wireless signals and can perfo
 %           & wireless localization (correctness)
 % -------- "Attack space" for wireless localization
 % ---- Why not a pin?
+LGTM is robust in the face of many attacks which other device pairing schemes fall to. 
+
+\subsubsection{User Impersonation via Imprecise Wireless Localization}
+As stated above, LGTM relies heavily on wireless localization for security, and so it should come as no surprise that imprecise wireless localization can result in serious security issues for LGTM. Consider Alice and Bob are face-to-face with one-another and an attacker, Eve, is close enough to Bob so that wireless localization will confuse the two of them. Eve can obtain a valid facial recognition model for Bob either by communicating with him via LGTM or by gathering photographs of Bob and training her own model. Now that Eve has Bob's facial recognition parameters, Eve can initiate LGTM at the same time as Bob, while also sending Bob's facial recognition parameters. Alice will localize Eve's signal to be overlapping with Bob, and will also receive Bob's facial recognition parameters. So Alice will now have essentially two Bob's which she must choose from. If Alice selects Eve, then Eve is now free to impersonate Bob, until she is found out. In scenarios where silence is for some reason required, Eve may be able to pull this impersonation off for some time, perhaps long enough to exploit another system. \\
+
+\subsubsection{Man-in-the-Middle}
+Man-in-the-middle attacks plague all device pairing schemes since it is a notoriously hard problem to bootstrap trust and prevent someone from stepping in-between the two users pairing and impersonating both of them, since authenticity is not yet established. LGTM's localization helps significantly with this common problem by identifying the location of a device transmitting. So with a localization technique that works well, man-in-the-middle attacks are not possible. However, realistically localization remains a difficult problem with very recent schemes $[CITATIONS]$ being responsible for making LGTM feasible at all. These recent schemes are still not precise enough to totally remove the possibility of man-in-the-middle attacks. So it is possible for an attacker to impersonate both users, perhaps using separate but cooperating transceivers, and facilitate the authentication between both users while eavesdropping on the key exchanged. A very powerful attacker will be able to achieve this, but it will require very creative jamming. Eve will have to jam Bob enough so that Alice does not receive his messages, but Eve does and likewise with Alice. The rest of the attack proceeds with Eve merely carrying out both sides of the authentication to each opposing user, culminating in Alice and Bob having a shared key, which Eve also has and uses to eavesdrop on every communication Alice and Bob send to one-another. \\
+
+Man-in-the-middle attacks plague all device pairing systems, but I believe it has been made better by LGTM due to the addition of localization. \\
+
+\subsubsection{Jamming}
+Jamming is a very simple attack. Eve merely broadcasts on the frequencies Alice and Bob are attempting to communicate on and overpowers and communications abilities that the two may have, rendering them unable to communicate at all over the wireless channel. This is one form of denial-of-service attack, we shall look at another one in the next step.
+
+\subsubsection{Denial-of-Service}
+Denial-of-service is often used very generally, but here it is a very specific way for Eve to ruin Alice and Bob's communication. Eve can spin up many instances of LGTM when she sees Alice and Bob initiating it and Eve can legitimately go through the protocol with Alice and Bob until the end when it is time to authenticate the user. By spamming Alice and Bob Eve wastes valuable time and ties up system resources, which are significant due to the high computational costs incurred by wireless localization and facial recognition. In this manner, Eve can endeavor to make authentication take longer than is acceptable, or if she persists, Eve may even be able to exhaust Alice or Bob's device batteries.
+
 \subsection{Usability}
 % Usability
 % ---- Why not a pin?
@@ -274,6 +297,8 @@ Alice and Bob have now authenticated each others' wireless signals and can perfo
 %                   neither will AR in general, and neither will a pin)
 % -------- Depending on implementation, may be less secure, overhearing 
 %                   pin can be a security leak
+Much has been said about the wonderful usability of LGTM, it's time to back that up.
+
 \subsection{Privacy}
 % ---- Privacy
 
