@@ -297,14 +297,25 @@ Denial-of-service is often used very generally, but here it is a very specific w
 %                   neither will AR in general, and neither will a pin)
 % -------- Depending on implementation, may be less secure, overhearing 
 %                   pin can be a security leak
-Much has been said about the wonderful usability of LGTM, it's time to back that up.
+LGTM has usability at the core of its design and indeed pays a high price to maximize usability. As mentioned before, the facial recognition parameters are purely for usability purposes, and transmitting these recognition parameters is not cheap. It is my firm belief that this is worth it, because of the elegant simplicity that it affords LGTM. Usability is often judged by the number of user actions: LGTM requires two actions on the part of the user, initiation and confirmation. It is difficult to imagine a simpler protocol. \\
+
+Many device pairing methods are used every day in protocols like Bluetooth. In the case of Bluetooth the users are prompted to confirm that the pin number appearing on both devices is the same. Intuitively this sounds usable enough, however in a usability study conducted by $[CITATION WORK]$ in $[CITATION]$ it was found that this pairing method resulted in security errors with 20\% of users; meaning that users confirmed that mis-matched pins matched, authenticating the incorrect device. User choice is a huge problem point in security in general. Phishing attacks rely solely upon user incompetence and these are some of the most successful and common attacks $[CITATON FOR PHISHING COMMENTS]$ used in the real world. \\
+
+Beyond security concerns, not relying on a string comparison has other benefits. When two or more users are pairing devices they are usually relying on telling one-another what their displayed pins are vocally. This has a shorter range than the visual identification required in LGTM, and also might fail if the two users are in a loud place such as a concert. Further, this pin exchange will not work for deaf people. The deaf can resort to writing down their authentication strings, but I don't think any significant argument needs to be mounted to show that this is not a usability win. \\
+
+<NOT SURE IF THIS GOES HERE> \\
+An often un-mentioned aspect of usability is availability. LGTM does not rely on any infrastructure to perform authentication. No Internet connection, no central authority, no account information, etc. This property of LGTM is particularly appealing as it allows people to share content anytime, anywhere, for free. A common case that even the most privileged experience is ending up on an airplane where the WiFi is: first, behind a pay wall, second, slow, and third might not be working currently and there's nothing that can be done about it. Usability should consider the availability of the technology, and LGTM's only limitation on availability is the functionality core hardware on an augmented reality headset and a charged battery. \\
+
+LGTM relies on a a very minimal set of user actions, which is achieved by offloading a lot of preprocessing steps to the augmented reality headsets. LGTM remains usable under various common situations where the currently most popular $[CITATION???]$ string comparison method does not suffice. I believe that LGTM is closing in on the simplest authentication scheme that is possible. \\
 
 \subsection{Privacy}
 % ---- Privacy
+Users today are becoming more and more concerned about privacy. A study by $[CITATION STUFF]$ found that $<\%>$ of people have taken steps to increase their level of privacy online $[CITATION]$. By performing authentication over point-to-point wireless communications LGTM preserves privacy by keeping local content sharing details in the immediate area, as opposed to going through a central authentication authority which would likely capture sharing data and meta-data for various purposes. \\
 
 \subsection{Potential Alterations}  % Should this section be here?
 % Expanding to the group case
 % One way sharing: (I.E. Alice receives content from Bob, but not vice-versa)
+Ehhhh, maybe I'll actually include this in the final.... \\
 
 %%%%%%%%%%%%%%%%%
 \chapter{Implementation}
@@ -334,6 +345,30 @@ Much has been said about the wonderful usability of LGTM, it's time to back that
 % ---- This section should mainly discuss why certain things were NOT done, 
 %           and why things ARE done 
 % -------- belongs under "General Setup"
+\section{Introduction (Change this to a more appropriate title)}
+Stand-alone augmented reality headsets are currently quite expensive; the Microsoft HoloLens development kit which was just released comes in at \$3000 USD. On top of the price, there is not currently, to my knowledge, any stand-alone augmented reality headset that has a wireless card allowing users to access channel state information, which is a requirement for wireless localization. Suffice to say, it is not currently possible to implement LGTM in its proper environment. However, we need only look at the required components for LGTM and construct a test rig that satisfies these requirements. The base requirements are: point-to-point wireless communication, the ability to localize the same point-to-point wireless communication, a high-definition video camera, a screen, some sort of user input, and for a face to be adjacent to the wireless signal origin point (so that the wireless signal can be properly paired with a face). These requirements can be fulfilled using a laptop, some specialized Intel wireless card firmware, an array of three antennas, a web cam, and a picture of someone's face stuck on the back of the laptop. This setup, although strange, suffices to properly implement LGTM.
+
+\section{Hardware}
+The laptops used are all Fujitsus, two of them are Fujitsu LifeBook T900s and the third is a Fujitsu LifeBook T901. The T900s are equipped with: $<INSERT HARDWARE SPECS FOR THE T900s>$. The T901 is equipped with 8 GB of RAM and a 2.5 GHz Intel i5-2520M processor with 4 cores. All three laptops had an additional second wireless card added for the experiments; the Intel 5300 AGN wireless card with three external antennas as pictured in figure $<INSERT FIGURE LABEL>$. The three external antennas were placed on the backs of the laptop with Velcro and spaced exactly 10 cm apart. The three laptops all used the same external web cam for this implementation, the Logitech C270 720p web cam, which has a 60 degree field of view. \\
+
+\section{Software}
+The software used in this implementation was quite varied, and as such it will be broken up into sections describing the implementation for each segment, followed by a description of the glue software used to make it all run together. \\
+
+\subsection{Point-to-Point Wireless Communication}
+
+
+\subsection{Wireless Channel State Information Retrieval}
+
+
+\subsection{Wireless Localization}
+
+
+\subsection{Facial Detection and Recognition}
+
+
+\subsection{Main System Software}
+
+
 
 %%%%%%%%%%%%%%%%%
 \chapter{Experiments}
