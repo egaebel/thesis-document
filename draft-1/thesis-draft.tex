@@ -354,20 +354,20 @@ The laptops used are all Fujitsus, two of them are Fujitsu LifeBook T900s and th
 \section{Software}
 The software used in this implementation was quite varied, and as such it will be broken up into sections describing the implementation for each segment, followed by a description of the glue software used to make it all run together. \\
 
-\subsection{Point-to-Point Wireless Communication}
-
-
 \subsection{Wireless Channel State Information Retrieval}
+First and foremost, credit must be given to the researchers in $[HALPERIN CITATIOn]$ for creating custom firmware for the Intel 5300 AGN wireless card. This firmware permits recovery of channel state information from each packet received using $<GROUPINGS JARGON>$ to get 30 total readings from the subcarriers. This nets a total of 90 sensors to run signal processing code on. \\
 
+\subsection{Point-to-Point Wireless Communication}
+The firmware mentioned above also allows users to broadcast on a specified frequency with no formal connection being made. This creates a realistic adversarial wireless environment where any user can overhear any other. \\
 
 \subsection{Wireless Localization}
-
+Wireless localization is an old problem which has been getting more sophisticated and precise in the recent years. \\
 
 \subsection{Facial Detection and Recognition}
-
+Facial detection and recognition are very interesting areas of research. OpenCV, started by Intel in $<INSERT YEAR>$, is an open source computer vision library that provides easy-to-use vision APIs out of the box. In particular, I took advantage of the face detection provided by the Haarcascades technique and experimented with all three facial recognition techniques provided: Fisherfaces, Eigenfaces, and the Local Binary Pattern Histograms (LBPH) technique. \\
 
 \subsection{Main System Software}
-
+I took advantage of the myriad general tools provided by the Linux operating system and chose to tie together all of the above software with the Bourne-again Shell (BASH). \\
 
 
 %%%%%%%%%%%%%%%%%
