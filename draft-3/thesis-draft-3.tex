@@ -38,7 +38,7 @@
 
 % TITLE
 {\Large 
-Looks Good to Me (LGTM): 
+Looks Good to Me: 
 Authentication for Augmented Reality
 }
 
@@ -66,7 +66,7 @@ Guoqiang Yu
 
 \vfill
 
-May 15, 2016 \\
+April 25, 2016 \\
 Falls Church, Virginia
 
 \vfill
@@ -82,7 +82,7 @@ Copyright 2016, Ethan D. Gaebel
 \thispagestyle{empty}
 \begin{center}
 
-{\large Looks Good to Me (LGTM): 
+{\large Looks Good to Me: 
 Authentication for Augmented Reality}
 
 \vfill
@@ -220,6 +220,13 @@ Otherwise, Alice retrieves facial recognition parameters that define a facial re
 
 Bob computes Alice's location using the wireless localization algorithm to get: $L_{B} = G(CSI_{B})$. Bob runs the facial recognition algorithm, using Alice's facial recognition parameters to obtain a location for any faces that match $F_{A}$, denoted by $FL_{B} = H(F_{A})$. Bob compares $L_{B}$ and $FL_{B}$ to see if the coordinates overlap. If they do not match then they are thrown out. If there are no matches among all the options for $L_{B}$ and $FL_{B}$ then the protocol is aborted. If there are matches then Bob has a box drawn around Alice's face, matched by $F_{A}$, and whose location, $FL_{B}$, overlaps with the corresponding $L_{B}$. Bob is prompted to verify that the protocol has selected the correct face. In practice there may be many pairs of faces and locations to check at once since multiple users may be carrying out LGTM at the same time. In this case Bob selects Alice's face from the available faces, if it is present. If Bob fails to select Alice's face then the protocol aborts. Otherwise, the protocol has successfully completed, Alice and Bob have established a secure key $K$ and they have authenticated each other's wireless signals ensuring that they are communicating with who they think they are. They are now free to send encrypted content back and forth. \par
 
+\begin{figure}[!htb]
+    \begin{center}
+        \caption{Protocol diagram.}
+        \label{figure: protocol-diagram}
+        \includegraphics[scale=0.4]{../figures/looks-good-to-me-protocol-diagram.pdf}
+    \end{center}
+\end{figure}
 
 \section{Protocol Analysis}
 \subsection{Components (This title sucks, get a better one)}
@@ -253,7 +260,15 @@ An attacker, Eve, can use two small devices physically attached to Alice and Bob
 
 A more realistic man-in-the-middle attack for the present is one reliant on inaccurate localization results. As mentioned above, localization can not be called a solved problem yet, and any implementation of LGTM will have to deal with the currently accepted localization techniques, errors and all. The procedure would proceed as in the attack above, except Eve's devices will not need to be as close. We assume that implementors of LGTM will not rely on security through obscurity, so Eve will be aware of the localization abilities of Alice and Bob's device's implementations. Eve can position her devices behind, adjacent to, or in front of Alice and Bob with less precision and run her man-in-the-middle attack as above. \par
 
-Inaccurate localization results can also be used in one-way impersonation. Eve might want to impersonate Alice to Bob, so she sets up a device near enough to Alice to fool the localization procedure and transmits Alice's facial recognition parameters. Eve will also need to obtain a facial recognition model for Alice, which she can do by participating in LGTM with Alice, searching for photos of Alice on the Internet, or by taking photos of Alice herself and then training a facial recognition model. As mentioned in the previous subsection, this attack will be partially defended against in the case where Eve is a spontaneous random attacker since the facial recognition parameters, while not secret, do take some work to acquire, work which an attacker is most likely unable to do if they are attacking random users. \par
+Inaccurate localization results can also be used in one-way impersonation as shown in \ref{figure: user-impersonation}. Eve might want to impersonate Alice to Bob, so she sets up a device near enough to Alice to fool the localization procedure and transmits Alice's facial recognition parameters. Eve will also need to obtain a facial recognition model for Alice, which she can do by participating in LGTM with Alice, searching for photos of Alice on the Internet, or by taking photos of Alice herself and then training a facial recognition model. As mentioned in the previous subsection, this attack will be partially defended against in the case where Eve is a spontaneous random attacker since the facial recognition parameters, while not secret, do take some work to acquire, work which an attacker is most likely unable to do if they are attacking random users. \par
+
+\begin{figure}[!htb]
+    \begin{center}
+        \caption{Eve performs a user-impersonation attack by broadcasting from behind Bob, thus impersonating Bob to Alice.}
+        \label{figure: user-impersonation}
+        \centerline{\includegraphics[scale=0.075]{../images/user-impersonation-attack.png}}
+    \end{center}
+\end{figure}
 
 User impersonation will usually be protected against even further by context. LGTM's most likely use-case is that Alice and Bob want to share digital content via their augmented reality headsets and that they are already interacting and conversing. If Eve impersonates Alice to Bob, then Alice will not be sharing anything with Bob and vice-versa, which will not go unnoticed. Bob will likely terminate the connection and try again since it will be apparent that the protocol failed. This is slightly similar to pairing protocols which use an out-of-band channel to transmit authentication information, except in this case the out-of-band channel is being used for verification of a successful pairing. It is possible though to imagine scenarios where Bob might not notice that he is paired with someone besides Alice. Perhaps for some reason Alice and Bob are only pairing their devices and not communicating outside of that interaction. In this scenario Eve's impersonation will succeed. It is our hope that wireless localization will continue to grow more and more precise, as it has over its entire history, to the point where inaccurate localization is no longer a valid attack vector. \par
 
@@ -307,6 +322,21 @@ Furthermore, by sending data from point to point we avoid empowering a central a
 Real world augmented reality headsets are still fresh on the market and are very rare. On top of this the few headsets on the market do not provide sufficient access to wireless information that is necessary for wireless localization. These two factors make implementing LGTM on real augmented reality headsets infeasible. \par
 
 However, we have stripped down LGTM's hardware requirements to the bare minimum leaving us in need of: a high-definition video camera, wireless point to point communication capabilities, wireless localization capabilities, a display, reasonable computational abilities, and close proximity of a face to wireless antennas. We satisfy all of these requirements by equipping two Fujitsu LifeBook T900 laptops running Linux Mint 17 Qiana with: a Logitech C270 720p web cam, an Intel 5300 wireless card with custom firmware for Linux from Halperin et al. \cite{ChannelStateInformationToolReleaseHalperin2011} that enables retrieval of channel state information and point to point wireless communication using 802.11n, an array of three antennas affixed to the back of the laptop screen at 10 centimeter intervals, and finally by attaching printed out pictures of faces from the Yalefaces dataset \cite{FisherfacesBelhumeur1997} to the back of the laptop over the antenna array. This last point is important since augmented reality headset users will have their face directly adjacent to the wireless transmitter which LGTM exploits to couple the wireless signal and the user together. To be sure, our testbed itself is not a practical setup, but it perfectly emulates the requisite hardware that real augmented reality headsets will be equipped with. \par
+
+\begin{figure}[!htb]
+    \begin{center}
+        \caption{Testbed laptop shown without a printed out picture of a face and with a printed out picture of a face.}
+        \label{figure: testbed-pictures}
+        \begin{subfigure}[Testbed without face picture attached]{0.3\textwidth}
+            \centerline{\includegraphics[scale=0.1]{../images/testbed-without-face.jpg}}
+        \end{subfigure}
+        \par\bigskip
+        \begin{subfigure}[Testbed with face picture attached]{0.3\textwidth}
+            \centerline{\includegraphics[scale=0.1]{../images/testbed-with-face.jpg}}
+        \end{subfigure}
+        \par\bigskip
+    \end{center}
+\end{figure}
 % Why LGTM cannot be implemented on real AR systems
 % ---- Availability
 % ---- Lack of open firmware for wireless localization
@@ -403,86 +433,27 @@ However, to properly utilize the new time of flight phase shifts some additional
 
 Recall that in the classical MUSIC algorithm the steering vector is a vector of signals obtained across an antenna array that is parameterized only by an angle $\theta$. SpotFi's modification in adding time of flight makes the steering vector a two parameter function, $a(\theta, \tau)$, where $\tau$ is time of flight. However, the new steering vector and signal measurement matrix must be carefully manipulated to fit the constraints put forward by MUSIC. The trick to doing this is to construct the new $X$ such that the sensors are overlapping sub-arrays of sensors in terms of time of flight and angle of arrival. Since MUSIC is a mathematical technique, the authors of SpotFi move $\Phi_{\theta k}$ and $\Omega_{\tau k}$ terms into the matrix of complex gains, $F$ so that $A$ can be expressed in terms of steering vectors whose only difference is the values of $\theta$ and $\tau$ that they're parameterized by. See figure $<insert figure reference>$ to see exactly how this manifests itself. This altered signal matrix is referred to as the smoothed channel state information matrix and this signal matrix can be said to have $30$ sensors total, which is achieved by creating all possible shifts of $15$ subcarriers between two antennas. Now that we have the new steering vector $a(\theta, \tau)$ and the smoothed channel state information matrix we can input this into the classical MUSIC algorithm, with minor modifications to account for both angle of arrival and time of flight. These minor modifications amount to simply plugging in different values for $\theta$ and $\tau$ in the expression $P_{MUSIC}(\theta, \tau) = \frac{1}{a^{H}(\theta, \tau) E_{N} E^{H}_{N} a(\theta, \tau)}$ instead of only plugging in different $\theta$ values. We search for peaks in the same way that we would with only $\theta$, except expanded to two-dimensions. \par
 
-% TODO: Move to separate file so I can scale it here....
-\begin{figure}
-\begin{center}
-\caption{}
-\label{}
-$X$
-% TODO: Remove newline
-\\
-$=$
-% TODO: Remove newline
-\\
-$
-\begin{bmatrix}
-csi_{1,1} & csi_{1,2} & ... & csi_{1, 16} & csi_{2, 1} & csi_{2, 2} & ... & csi_{2, 16} \\ 
-csi_{1,2} & csi_{1,3} & ... & csi_{1, 17} & csi_{2, 2} & csi_{2, 3} & ... & csi_{2, 17} \\ 
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-csi_{1,15} & csi_{1,16} & ... & csi_{1, 30} & csi_{2, 15} & csi_{2, 16} & ... & csi_{2, 30} \\ 
-csi_{2,1} & csi_{2,2} & ... & csi_{2, 16} & csi_{3, 1} & csi_{3, 2} & ... & csi_{3, 16} \\
-csi_{2,2} & csi_{2,3} & ... & csi_{2, 17} & csi_{3, 2} & csi_{3, 3} & ... & csi_{3, 17} \\  
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-csi_{2,15} & csi_{2,16} & ... & csi_{2, 30} & csi_{3, 15} & csi_{3, 16} & ... & csi_{3, 30} \\ 
-\end{bmatrix}$
-% TODO: Remove newline
-\\
-$=$
-% TODO: Remove newline
-\\
-$\begin{bmatrix}
-1 & 1 & ... & 1 & 1 & 1 & ... & 1 \\
-\Omega_{\tau 1} & \Omega_{\tau 2} & ... & \Omega_{\tau \frac{L}{2}} & \Omega_{\tau (\frac{L}{2} + 1)} & \Omega_{\tau (\frac{L}{2} + 2)} & ... & \Omega_{\tau L} \\
-\Omega^{2}_{\tau 1} & \Omega^{2}_{\tau 2} & ... & \Omega^{2}_{\tau \frac{L}{2}} & \Omega^{2}_{\tau (\frac{L}{2} + 1)} & \Omega^{2}_{\tau (\frac{L}{2} + 2)} & ... & \Omega^{2}_{\tau L} \\
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-\Omega^{14}_{\tau 1} & \Omega^{14}_{\tau 2} & ... & \Omega^{14}_{\tau \frac{L}{2}} & \Omega^{14}_{\tau (\frac{L}{2} + 1)} & \Omega^{14}_{\tau (\frac{L}{2} + 2)} & ... & \Omega^{14}_{\tau L} \\
-\Phi_{\theta 1} & \Phi_{\theta 2} & ... & \Phi_{\theta \frac{L}{2}} & \Phi_{\theta (\frac{L}{2} + 1)} & \Phi_{\theta (\frac{L}{2} + 2)} & ... & \Phi_{\theta L} \\
-\Omega_{\tau 1} \Phi_{\theta 1} & \Omega_{\tau 2} \Phi_{\theta 2} & ... & \Omega_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \Omega_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \Omega_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & ... & \Omega_{\tau L} \Phi_{\theta L} \\
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . \\
-\Omega^{14}_{\tau 1} \Phi_{\theta 1} & \Omega^{14}_{\tau 2} \Phi_{\theta 2} & ... & \Omega^{14}_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \Omega^{14}_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \Omega^{14}_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & ... & \Omega^{14}_{\tau L} \Phi_{\theta L} \\
-\end{bmatrix}$
-% TODO: Remove newline
-\\
-$\times$
-% TODO: Remove newline
-\\
-$\begin{bmatrix}
-\alpha_{1} & \alpha_{1} \Omega_{\tau 1} & \alpha_{1} \Omega^{2}_{\tau 1} & ... & \alpha_{1} \Omega^{15}_{\tau 1} & \alpha_{1} \Phi_{\theta 1} & \alpha_{1} \Omega_{\tau 1} \Phi_{\theta 1} & \alpha_{1} \Omega^{2}_{\tau 1} \Phi_{\theta 1} & ... & \alpha_{1} \Omega^{15}_{\tau 1} \Phi_{\theta 1} \\
-\alpha_{2} & \alpha_{2} \Omega_{\tau 2} & \alpha_{2} \Omega^{2}_{\tau 2} & ... & \alpha_{2} \Omega^{15}_{\tau 2} & \alpha_{2} \Phi_{\theta 2} & \alpha_{2} \Omega_{\tau 2} \Phi_{\theta 2} & \alpha_{2} \Omega^{2}_{\tau 2} \Phi_{\theta 2} & ... & \alpha_{2} \Omega^{15}_{\tau 2} \Phi_{\theta 2} \\
-. & . & . & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . & . & . \\
-\alpha_{\frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega_{\tau \frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega^{2}_{\tau \frac{L}{2}} & ... & \alpha_{\frac{L}{2}} \Omega^{15}_{\tau \frac{L}{2}} & \alpha_{\frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega^{2}_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & ... & \alpha_{\frac{L}{2}} \Omega^{15}_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} \\
-\alpha_{(\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega_{\tau (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega^{2}_{\tau (\frac{L}{2} + 1)} & ... & \alpha_{(\frac{L}{2} + 1)} \Omega^{15}_{\tau (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega^{2}_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & ... & \alpha_{(\frac{L}{2} + 1)} \Omega^{15}_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} \\
-\alpha_{(\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega_{\tau (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega^{2}_{\tau (\frac{L}{2} + 2)} & ... & \alpha_{(\frac{L}{2} + 2)} \Omega^{15}_{\tau (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega^{2}_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & ... & \alpha_{(\frac{L}{2} + 2)} \Omega^{15}_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} \\
-. & . & . & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . & . & . \\
-. & . & . & . & . & . & . & . & . & . \\
-\alpha_{L} & \alpha_{L} \Omega_{\tau L} & \alpha_{L} \Omega^{2}_{\tau L} & ... & \alpha_{L} \Omega^{15}_{\tau L} & \alpha_{L} \Phi_{\theta L} & \alpha_{L} \Omega_{\tau L} \Phi_{\theta L} & \alpha_{L} \Omega^{2}_{\tau L} \Phi_{\theta L} & ... & \alpha_{L} \Omega^{15}_{\tau L} \Phi_{\theta L} \\
-\end{bmatrix}
-$
-
-%function steering_vector = compute_steering_vector(theta, tau, freq, sub_freq_delta, ant_dist)
-%    steering_vector = zeros(30, 1);
-%    k = 1;
-%    base_element = 1;
-%    for ii = 1:2
-%        for jj = 1:15
-%            steering_vector(k, 1) = base_element * omega_tof_phase(tau, sub_freq_delta)^(jj - 1);
-%            k = k + 1;
-%        end
-%        base_element = base_element * phi_aoa_phase(theta, freq, ant_dist);
-%    end
-%end
-\end{center}
+\begin{figure}[!htb]
+    \begin{center}
+        \begin{subfigure}[b]{0.3\textwidth}
+            \caption{}
+            \label{figure: smooothed-csi-matrix}
+            \centerline{\scalebox{0.5}{\input{../figures/smoothed-csi-matrix-explained.tex}}}
+        \end{subfigure}
+        \par\bigskip
+        \begin{subfigure}[b]{0.3\textwidth}
+            \caption{}
+            \label{figure: smooothed-csi-matrix}
+            \centerline{\scalebox{0.5}{\input{../figures/steering-matrix-explained.tex}}}
+        \end{subfigure}
+        \par\bigskip
+        \begin{subfigure}[b]{0.3\textwidth}
+            \caption{}
+            \label{figure: smooothed-csi-matrix}
+            \centerline{\scalebox{0.5}{\input{../figures/complex-gains-matrix-explained.tex}}}
+        \end{subfigure}
+        \par\bigskip
+    \end{center}
 \end{figure}
 
 SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed normalized time of flight and normalized angle of arrival as two-dimensional coordinates. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions we used agglomerative clustering, which only takes qualitative cluster measurement parameters that can be determined prior to deployment. A cluster is selected as the correct choice using a weighted likelihood computed using: number of points per cluster, average angle of arrival for the cluster, average time of flight for the cluster, and mean time of flight. The idea behind this likelihood is that the cluster with the most points and the least variance (tightest clustering) should be selected since the direct signal path should have less variance in its measurements. \par
@@ -518,9 +489,18 @@ We found it prudent to run a few experiments to validate our implementation laid
 We also briefly discuss our validation of OpenCV's LBPH facial recognizer since we are using it in a non-traditional scenario. Most research in facial recognition deals with a known dataset of photos and feeds these photos directly into the facial recognition algorithms, often with some preprocessing first. In LGTM we train on photos and test on faces captured via web cam in real-time. This introduces additional noise since the faces are not perfectly centered in the x, y, or z axes and there is inherent noise in picking up a printed out photo from a camera. For these reasons, we see fit to briefly mention our evaluation methodology and mention the performance timing for training, if only to leave the reader without a doubt of our system's abilities. \par
 
 \section{Wireless Localization -- SpotFi (FIX THIS TITLE HERE!! THIS ISN'T GREAT!)}
+
 \begin{table}
-    \caption{Sampling data results}
-    \label{sampling-data-table}
+    \begin{center}
+        \caption{Base data results.}
+        \label{table: base-data-table}
+        \input{../figures/base-data-table--1m-2m-3m.tex}        
+    \end{center}
+\end{table}
+
+\begin{table}
+    \caption{Sampling data results.}
+    \label{table: sampling-data-table}
     \begin{subfigure}[b]{0.3\textwidth}
         \begin{center}
             \scalebox{0.75}{\input{../figures/sampling-data-table--distance-1m.tex}}
@@ -542,15 +522,18 @@ We also briefly discuss our validation of OpenCV's LBPH facial recognizer since 
 \end{table}
 
 \subsection{Accuracy}
-Localization accuracy is front and center in LGTM. We rely on wireless localization to provide us with guarantees about a transmitter's location which we then use to bootstrap authentication. We found that our system performs modestly in comparison to other localization works, albeit not up to the high standards that a secure system would require. This is the point where we remind the reader that this is a proof on concept and that we are further relying upon future localization techniques, such as \cite{ChronosSingleAPLocalizationVasisht2016}, to make LGTM airtight with respect to security. \par
+Localization accuracy is front and center in LGTM. We rely on wireless localization to provide us with guarantees about a transmitter's location which we then use to bootstrap authentication. We found that our system performs modestly in comparison to other localization works, albeit not up to the high standards that a secure system would require. \par
 
-To account for minor errors in angle of arrival computations we introduce a slight error tolerance of 40 cm $<I \: may \: make \: this \: smaller...>$ on either side of the face. Since we control the distance and angle between test devices in our experiment we use the error tolerance and distance to compute the tolerance for the angle in degrees. \par
+To account for acceptable errors in angle of arrival computations I introduce a slight error tolerance of 40 cm $<I \: may \: make \: this \: smaller...>$ on either side of the face. Since we control the distance and angle between test devices in our experiment we use the error tolerance and distance to compute the tolerance for the angle in degrees. \par
 
-There are many lessons to gain from the data we collect for LGTM's localization. LGTM uses a likelihood technique to make the final selection of angle of arrival. This can lead to an incorrect angle of arrival being selected over the correct one, sometimes by a very slim margin. To evaluate LGTM's localization accuracy with this in mind we focus on the accuracy of the top-5 angle of arrival selections as well as the mean error and median error.Top-5, mean error, and median error accuracy reports for distances of: 1 meter, 2 meters, and 3 meters and angles of -20, -10, 0, 10, and 20 degrees can be found in table $<INSERT TABLE REFERENCE>$. We see that localization accuracy is closely correlated with distance. \par
+There are many lessons to gain from the data we collect for LGTM's localization. LGTM uses a likelihood technique to make the final selection of angle of arrival. This can lead to an incorrect angle of arrival being selected over the correct one, sometimes by a very slim margin. To evaluate LGTM's localization accuracy with this in mind we focus on the accuracy of the top-5 angle of arrival selections as well as the mean error and median error.Top-5, mean error, and median error accuracy reports for distances of: 1 meter, 2 meters, and 3 meters. The data we used was gathered with our two testbed laptops at angles of: -20, -10, 0, 10, and 20 degrees, where 0 degrees is when the laptops are directly facing one another, +10 degrees indicates that one laptop is 10 degrees to the right from the center and -10 degrees indicates that one laptop is 10 degrees to the left from the center. The +/- 20 degree cases are the same as the +/- 10 degree cases. For each angle I performed LGTM 10 times and saved off the channel state information used on each laptop. So this yields 20 samples for each angle at each distance and a total of 200 samples for each distance. \par 
+
+The localization accuracy results are reported in table \ref{table: base-data-table}. As expected, localization accuracy is strongly coupled with the distance between devices. Percent correct in the top-1 position is almost halved when moving from 1 meter to 2 meters and beyond 2 meters the percent correct in the top-5 drops below 50\%. \par
 
 \subsection{Performance}
-Wireless localization performance is primarily bounded by the number of packets whose channel state information is used in computing the angle of arrival with our modified SpotFi implementation. As mentioned in the implementation section we parallelize this since processing independent packets is an ``embarrassingly parallel'' problem. However we still incur high performance penalties at this step due to the large number of packets. We collect channel state information for the packets carrying the facial recognition parameters, which in our evaluation is actually just a tarred folder of photos which are used to train a facial recognition model. The number of packets to transmit this comes to approximately 1025 with minor variations due to slightly different image file sizes. Processing all these packets in the modified SpotFi takes up precious time, but using a large number of packets should intuitively provide better localization results. To see how the trade-off between localization accuracy and processing time when varying the number of packets considered we sample packets uniformly from the packet stream using sample sizes of: 750, 500, 250, 100, 50, 25, and 10. Our findings are presented in table $<INSERT TABLE REFERENCE>$. \par
-% I need sampling data results first...
+Wireless localization performance is primarily bounded by the number of packets whose channel state information is used in computing the angle of arrival with our modified SpotFi implementation. As mentioned in the implementation section we parallelize this since processing independent packets is an ``embarrassingly parallel'' problem. However we still incur high performance penalties at this step due to the large number of packets. We collect channel state information for the packets carrying the facial recognition parameters, which in our evaluation is actually just a tarred folder of photos which are used to train a facial recognition model. The number of packets to transmit this comes to approximately 1025 with minor variations due to slightly different image file sizes. Processing all these packets in the modified SpotFi takes up precious time, but using a large number of packets should intuitively provide better localization results. To see how the trade-off between localization accuracy and processing time when varying the number of packets considered we sample packets uniformly from the packet stream using sample sizes of: 750, 500, 250, 100, 50, 25, and 10. Our findings are presented in table \ref{table: sampling-data-table} in comparison to the baseline localization results with no sampling. \par
+
+Here we find something very surprising, reducing the number of packets increases our localization accuracy. This could be explained by the presence of bursty noise which occurs in large chunks and throws off the clustering step in SpotFi, but this is simply a speculation at this point. Regardless of what is causing this unexpected effect, I can certainly say that it is very positive. What I expected to be a trade-off between computation time and localization accuracy turned into an increase for both, a most pleasant surprise! \par
 
 \section{Facial Recognition}
 In deploying facial recognition in LGTM we utilized the Yalefaces \cite{FisherfacesBelhumeur1997} dataset to provide the faces to be recognized. This dataset is not large, it includes photos of 15 subjects with 12 photos per subject. Most of each subject's set of photos contained one photo of the subject wearing glasses. A couple of subject's photo sets had the subject wearing glasses in all but a few photos. We removed from each subject's set of photos the least common eyewear choice. That is, if a subject was not wearing glasses in a majority of the photos, we removed the glasses photos, if the subject was mostly wearing glasses, we removed the photos where they were not wearing glasses. Recognizing users both with and without glasses makes facial recognition slightly more difficult and in all LGTM use cases both users will need to be wearing augmented reality headsets, so keeping eye wear uniform makes sense for our use case. \par
@@ -564,7 +547,7 @@ We can safely say, just from our cursory validation experiments on LBPH facial r
 % Mention Performance
 
 \section{Full System Timing (BETTER TITLE)}
-
+Overall, our implementation of LGTM takes $<INSERT \: TIME \: TO \: RUN>$ seconds to run. Consider on top of this that there are various unindeal procedures that I used to workaround various issues and this timing is very good for a device pairing procedure. \par
 
 \chapter{Conclusion}
 \section{Future Work on LGTM}
