@@ -365,16 +365,20 @@ To recognize the faces detected we require robust facial recognition under somet
 We used the OpenCV 3.0 \cite{OpenCV} C++ library in our implementation to compare Eigenfaces, Fisherfaces, and LBPH for facial recognition and also for facial detection using Haar feature-based cascade classifiers. OpenCV provides out-of-the-box implementations for all of these methods. \par
 
 \subsection{Wireless Localization}
-The most intricate of the technologies involved in LGTM is by far wireless localization. The recent advances in wireless localization \cite{UbicarseKumar2014,SpotFiKotaru2015,ChronosSingleAPLocalizationVasisht2016} are indeed what make LGTM feasible. For our testbed we implemented a modified version of SpotFi \cite{SpotFiKotaru2015}, adapted to run from a single device instead of coordinated devices. SpotFi is an angle of arrival based localization technique that relies on the classical MUSIC algorithm \cite{MUSICSchmidt1986} to compute the angle that a wireless signal originates from relative to an array of antennas. The key to MUSIC is the existence of a phase difference between each signal as it arrives at each antenna in an array. These phase differences occur because the antennas are at different locations, meaning a single wireless signal must travel different distances to arrive at each antenna in an array. $<MAKE \: FIGURE \: ILLUSTRATING \: THIS!>$  When expressed as a complex exponential we can write the signal at the Nth antenna as $e^{-j 2 \pi f \frac{N d sin(\theta)}{c}}$ where $j$ is $\sqrt{-1}$, $f$ is the wireless signal's frequency, $d$ is the distance between antennas in the array, $c$ is the speed of light, and $\theta$ is the angle of arrival. The vector of these expressions is referred to as the steering vector, denoted $a(\theta)$, and is a function of $\theta$ since the remaining parameters are constant. 
+The most intricate of the technologies involved in LGTM is by far wireless localization. The recent advances in wireless localization \cite{UbicarseKumar2014,SpotFiKotaru2015,ChronosSingleAPLocalizationVasisht2016} are indeed what make LGTM feasible. For our testbed we implemented a modified version of SpotFi \cite{SpotFiKotaru2015}, adapted to run from a single device instead of coordinated devices. SpotFi is an angle of arrival based localization technique that relies on the classical MUSIC algorithm \cite{MUSICSchmidt1986} to compute the angle that a wireless signal originates from relative to an array of antennas. The key to MUSIC is the existence of a phase difference between each signal as it arrives at each antenna in an array. These phase differences occur because the antennas are at different locations, meaning a single wireless signal must travel different distances to arrive at each antenna in an array. $<MAKE \: FIGURE \: ILLUSTRATING \: THIS!>$  When expressed as a complex exponential we can write the signal at the Nth antenna as:
+
+$$\Phi(\theta_{k}) = e^{-j 2 \pi f \frac{N d sin(\theta_{k})}{c}}$$
+
+where $j$ is $\sqrt{-1}$, $f$ is the wireless signal's frequency, $d$ is the distance between antennas in the array, $c$ is the speed of light, and $\theta$ is the angle of arrival. The vector of these expressions is referred to as the steering vector, denoted $a(\theta)$, and is a function of $\theta$ since the remaining parameters are constant. 
 
 The MUSIC paper models a received wireless signal, the column vector $X$ with $M$ elements, in terms of a matrix, $A$, with $D$ columns, each of which is a steering vector parameterized with a different $\theta$. The $D$ steering vectors are for the $D$ different signal paths resulting from multipath effects. Each of these steering vectors has $M$ elements, one for each antenna, making $A$ an $M \times D$ matrix. This matrix is multiplied multiplied by a column vector of $D$ complex gains, and this expressions has Gaussian white noise added to it. All this is written as: \\
 
 $$X = AF + W$$
 
 % TODO: FIx bar....
-For the purpose of localization we seek to compute $A$ from the information we have about the physical layer through our setup and the measured signal, $X$. To start with, MUSIC computes the covariance matrix $S = \bar{XX^{*}} = A \bar{FF^{*}} A^{*} + \bar{WW^{*}}$. This expression is decomposed using eigendecomposition so that we have: $S = A \bar{FF^{*}} A^{*} + \lambda S_{0}$, where $S_{0}$ represents noise and $\lambda$ is an eigenvalue of $S$. When the elements of the noise vector $W$ have mean 0 and variance $\sigma^{2}$ $\lambda S_{0} = \sigma^{2} I$, where $I$ is the identity matrix. When the number of paths, $D$, is less than the number of sensors, or in our case antennas, $M$, then $A \bar{FF^{*}} A^{*}$ is singular, making its determinant 0. This insight yields the expression: $\lvert A \bar{FF^{*}} A^{*} \rvert = \lvert S - \lambda S_{0} \rvert = 0$. If $A$ is a full rank matrix and $\bar{FF^{*}}$ is positive definite then $A \bar{FF^{*}} A^{*}$ must be a positive semi-definite matrix, meaning that the $\lambda$ in the expression above must be the minimum eigenvalue $\lambda_{min} \geq 0$. \par
+For the purpose of localization we seek to compute $A$ from the information we have about the physical layer through our setup and the measured signal, $X$. To start with, MUSIC computes the covariance matrix $S = \bar{XX^{*}} = A \bar{FF^{*}} A^{*} + \bar{WW^{*}}$. This expression is decomposed using eigendecomposition so that we have: $S = A FF^{H} A^{H} + \lambda S_{0}$, where $S_{0}$ represents noise and $\lambda$ is an eigenvalue of $S$. When the elements of the noise vector $W$ have mean 0 and variance $\sigma^{2}$ $\lambda S_{0} = \sigma^{2} I$, where $I$ is the identity matrix. When the number of paths, $D$, is less than the number of sensors, or in our case antennas, $M$, then $A FF^{H} A^{H}$ is singular, making its determinant 0. This insight yields the expression: $\lvert A FF^{H} A^{H} \rvert = \lvert S - \lambda S_{0} \rvert = 0$. If $A$ is a full rank matrix and $FF^{H}$ is positive definite then $A FF^{H} A^{H}$ must be a positive semi-definite matrix, meaning that the $\lambda$ in the expression above must be the minimum eigenvalue $\lambda_{min} \geq 0$. \par
 
-The rank of $A \bar{FF^{*}} A^{*}$ is $D$ and this can be shown by computing the eigenvalues of $S$, since $\lambda_{min}$ will be repeated $P = M - D$ times. Using this we can compute the number of paths, $D$, from measurements by determining $P$ by counting the number of times the minimum eigenvalue is repeated for $S$. \par
+The rank of $A FF^{H} A^{H}$ is $D$ and this can be shown by computing the eigenvalues of $S$, since $\lambda_{min}$ will be repeated $P = M - D$ times. Using this we can compute the number of paths, $D$, from measurements by determining $P$ by counting the number of times the minimum eigenvalue is repeated for $S$. \par
 
 Back to our steering vectors. When actual angle of arrivals, recall that there are $D$ actual angle of arrivals, are input to the steering vector it will be orthogonal to what is referred to as the noise sub-space. MUSIC computes the noise sub-space by computing the eigenvectors of the signal covariance matrix and constructing a new matrix using as columns the eigenvectors whose eigenvalues are at a minimum, there are $P$ of these eigenvectors. This matrix is denoted $E_{N}$. 
 
@@ -384,17 +388,101 @@ Due to multipath effects there will usually be multiple peaks. Multipath is reso
 
 The key insights in SpotFi are using channel state information measurements from each subcarrier in 802.11n wireless combined with a method of creating more sensors using mathematical tricks while only requiring three antennas. \par
 
-To understand this first insight I must briefly explain what subcarriers are. Many modern communications systems, including 802.11n, rely on a scheme called orthogonal frequency division multiplexing (OFDM). From a high level, OFDM divides up a band of frequency into separate channels and transmits different data using each channel. These separated channels are referred to as subcarriers since each have a carrier frequency which is a small part of a different central frequency which defines the section used for OFDM.  $<GET \: A \: GOOD \: FIGURE \: FOR \: THIS>$. \par
+To understand this first insight I will briefly explain what subcarriers are. Many modern communications systems, including 802.11n, rely on a scheme called orthogonal frequency division multiplexing (OFDM). From a high level, OFDM divides up a band of frequency into separate channels and transmits different data using each channel. These separated channels are referred to as subcarriers since each have a carrier frequency which is a small part of a different central frequency which defines the section used for OFDM.  $<GET \: A \: GOOD \: FIGURE \: FOR \: THIS>$. \par
 
 To use these subcarriers first requires a modification to the model of a wireless signal presented in the original MUSIC paper. Instead of modeling $X$ as a column vector of $M$ measurements we model $X$ as an $M \times N$ matrix, where $N$ equals the number of subcarriers used. This results in the channel gain matrix $F$ being modeled as a $D \times N$ matrix and the noise matrix $W$ being modeled as a $M \times N$ matrix. \par
 
-Although the authors of SpotFi perform their manipulations on the expression, minus the noise matrix, $W$, for simplicity, so I will do the same for the remainder of my explanation of SpotFi. \par
+The authors of SpotFi perform their manipulations on the expression, minus the noise matrix, $W$, for simplicity, so I will do the same for the remainder of my explanation of SpotFi. \par
 
+SpotFi modifies MUSIC to use steering vectors that consider both time of flight and angle of arrival. As stated above, MUSIC uses phase differences across sensor arrays, phase differences between subcarriers are too small to be useful since the difference is $2 \pi (m - 1) d (f_i - f_j) \sin(\theta_k) / c$, where $f_i$ and $f_j$ denote the frequencies of two subcarriers. This phase difference is rendered insignificant by the speed of light term, $c$, in the denominator. The maximum spacing between subcarriers in 802.11 is 40 MHz. At this spacing, with antennas spaced at half a wavelength any angle of arrival introduces a phase shift of at most 0.002 radians, which could just as easily be a result of noise. The authors of SpotFi introduce time of flight to obtain more discriminating phase differences. Time of flight between subcarriers can also be expressed as a complex exponential, $$\Omega(\tau_{k}) = e^{-j 2 \pi f_{\delta} \tau_k }$$, where $f_{\delta}$ is the frequency difference between subcarriers and $\tau_{k}$ is the time of flight for the kth path. The phase difference for time of flight across two adjacent subcarriers can be computed with: $-2 \pi (n - 1) f_{\delta} \tau_k$, where $f_{\delta}$ is the frequency difference between two adjacent subcarriers. Since there is no speed of light term in the denominator the phase difference that exists between subcarriers is significant. SpotFi uses these phase differences between subcarriers for time of flight the same way classical MUSIC uses the phase differences between antennas. \par
 
+However, to properly utilize the new time of flight phase shifts some additional work must be done. Recall that MUSIC requires that the number of measurements from the sensor array that can be written as a linear combination of steering vectors must be greater than the number of paths. To satisfy this requirement the SpotFi authors construct a new signal measurement matrix $X$ using the recorded signal information. \par
 
-To use these two insights SpotFi modifies MUSIC to use steering vectors that consider both time of flight and angle of arrival. Time of flight between subcarriers can also be expressed as a complex exponential, $e^{-j 2 \pi f_{\delta} \tau_k }$, where $f_{\delta}$ is the frequency difference between subcarriers and $\tau_{k}$ is the time of flight for the kth path. Since there is no speed of light term in the denominator the phase difference that exists between subcarriers, as a result of small frequency differences, is significant. Compare this to the phase difference induced between two subcarrier frequencies in $<insert equation reference>$. Small frequency differences, like the ones that exist between subcarriers, are blown away by the speed of light constant in the denominator. SpotFi uses these phase differences between subcarriers the same way classical MUSIC uses the phase differences between antennas. Through clever mathematical manipulations the SpotFi authors use this to increase the number of effective sensors in SpotFi to 30, which is sufficient to account for usual indoor multipath conditions. For further details on the signal processing involved in the altered MUSIC algorithm we refer you to the SpotFi paper $[CITATION]$. \par
+Recall that in the classical MUSIC algorithm the steering vector is a vector of signals obtained across an antenna array that is parameterized only by an angle $\theta$. SpotFi's modification in adding time of flight makes the steering vector a two parameter function, $a(\theta, \tau)$, where $\tau$ is time of flight. However, the new steering vector and signal measurement matrix must be carefully manipulated to fit the constraints put forward by MUSIC. The trick to doing this is to construct the new $X$ such that the sensors are overlapping sub-arrays of sensors in terms of time of flight and angle of arrival. Since MUSIC is a mathematical technique, the authors of SpotFi move $\Phi_{\theta k}$ and $\Omega_{\tau k}$ terms into the matrix of complex gains, $F$ so that $A$ can be expressed in terms of steering vectors whose only difference is the values of $\theta$ and $\tau$ that they're parameterized by. See figure $<insert figure reference>$ to see exactly how this manifests itself. This altered signal matrix is referred to as the smoothed channel state information matrix and this signal matrix can be said to have $30$ sensors total, which is achieved by creating all possible shifts of $15$ subcarriers between two antennas. Now that we have the new steering vector $a(\theta, \tau)$ and the smoothed channel state information matrix we can input this into the classical MUSIC algorithm, with minor modifications to account for both angle of arrival and time of flight. These minor modifications amount to simply plugging in different values for $\theta$ and $\tau$ in the expression $P_{MUSIC}(\theta, \tau) = \frac{1}{a^{H}(\theta, \tau) E_{N} E^{H}_{N} a(\theta, \tau)}$ instead of only plugging in different $\theta$ values. We search for peaks in the same way that we would with only $\theta$, except expanded to two-dimensions. \par
 
-SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed time of flight and angle of arrival as two-dimensional coordinates. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions we used agglomerative clustering, which only takes qualitative cluster measurement parameters that can be determined prior to deployment. A cluster is selected as the correct choice using a weighted likelihood computed using: number of points per cluster, average angle of arrival for the cluster, average time of flight for the cluster, and mean time of flight. The idea behind this likelihood is that the cluster with the most points and the least variance (tightest clustering) should be selected since the direct signal path should have less variance in its measurements. To compute the weights for each of the likelihood terms we collected channel state information from a transmitter at several known positions in a room and then fed cluster information labeled with the correct cluster choice into a linear support vector machine \cite{SvmTutorialBurges1998}. \par
+% TODO: Move to separate file so I can scale it here....
+\begin{figure}
+\begin{center}
+\caption{}
+\label{}
+$X$
+% TODO: Remove newline
+\\
+$=$
+% TODO: Remove newline
+\\
+$
+\begin{bmatrix}
+csi_{1,1} & csi_{1,2} & ... & csi_{1, 16} & csi_{2, 1} & csi_{2, 2} & ... & csi_{2, 16} \\ 
+csi_{1,2} & csi_{1,3} & ... & csi_{1, 17} & csi_{2, 2} & csi_{2, 3} & ... & csi_{2, 17} \\ 
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+csi_{1,15} & csi_{1,16} & ... & csi_{1, 30} & csi_{2, 15} & csi_{2, 16} & ... & csi_{2, 30} \\ 
+csi_{2,1} & csi_{2,2} & ... & csi_{2, 16} & csi_{3, 1} & csi_{3, 2} & ... & csi_{3, 16} \\
+csi_{2,2} & csi_{2,3} & ... & csi_{2, 17} & csi_{3, 2} & csi_{3, 3} & ... & csi_{3, 17} \\  
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+csi_{2,15} & csi_{2,16} & ... & csi_{2, 30} & csi_{3, 15} & csi_{3, 16} & ... & csi_{3, 30} \\ 
+\end{bmatrix}$
+% TODO: Remove newline
+\\
+$=$
+% TODO: Remove newline
+\\
+$\begin{bmatrix}
+1 & 1 & ... & 1 & 1 & 1 & ... & 1 \\
+\Omega_{\tau 1} & \Omega_{\tau 2} & ... & \Omega_{\tau \frac{L}{2}} & \Omega_{\tau (\frac{L}{2} + 1)} & \Omega_{\tau (\frac{L}{2} + 2)} & ... & \Omega_{\tau L} \\
+\Omega^{2}_{\tau 1} & \Omega^{2}_{\tau 2} & ... & \Omega^{2}_{\tau \frac{L}{2}} & \Omega^{2}_{\tau (\frac{L}{2} + 1)} & \Omega^{2}_{\tau (\frac{L}{2} + 2)} & ... & \Omega^{2}_{\tau L} \\
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+\Omega^{14}_{\tau 1} & \Omega^{14}_{\tau 2} & ... & \Omega^{14}_{\tau \frac{L}{2}} & \Omega^{14}_{\tau (\frac{L}{2} + 1)} & \Omega^{14}_{\tau (\frac{L}{2} + 2)} & ... & \Omega^{14}_{\tau L} \\
+\Phi_{\theta 1} & \Phi_{\theta 2} & ... & \Phi_{\theta \frac{L}{2}} & \Phi_{\theta (\frac{L}{2} + 1)} & \Phi_{\theta (\frac{L}{2} + 2)} & ... & \Phi_{\theta L} \\
+\Omega_{\tau 1} \Phi_{\theta 1} & \Omega_{\tau 2} \Phi_{\theta 2} & ... & \Omega_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \Omega_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \Omega_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & ... & \Omega_{\tau L} \Phi_{\theta L} \\
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . \\
+\Omega^{14}_{\tau 1} \Phi_{\theta 1} & \Omega^{14}_{\tau 2} \Phi_{\theta 2} & ... & \Omega^{14}_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \Omega^{14}_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \Omega^{14}_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & ... & \Omega^{14}_{\tau L} \Phi_{\theta L} \\
+\end{bmatrix}$
+% TODO: Remove newline
+\\
+$\times$
+% TODO: Remove newline
+\\
+$\begin{bmatrix}
+\alpha_{1} & \alpha_{1} \Omega_{\tau 1} & \alpha_{1} \Omega^{2}_{\tau 1} & ... & \alpha_{1} \Omega^{15}_{\tau 1} & \alpha_{1} \Phi_{\theta 1} & \alpha_{1} \Omega_{\tau 1} \Phi_{\theta 1} & \alpha_{1} \Omega^{2}_{\tau 1} \Phi_{\theta 1} & ... & \alpha_{1} \Omega^{15}_{\tau 1} \Phi_{\theta 1} \\
+\alpha_{2} & \alpha_{2} \Omega_{\tau 2} & \alpha_{2} \Omega^{2}_{\tau 2} & ... & \alpha_{2} \Omega^{15}_{\tau 2} & \alpha_{2} \Phi_{\theta 2} & \alpha_{2} \Omega_{\tau 2} \Phi_{\theta 2} & \alpha_{2} \Omega^{2}_{\tau 2} \Phi_{\theta 2} & ... & \alpha_{2} \Omega^{15}_{\tau 2} \Phi_{\theta 2} \\
+. & . & . & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . & . & . \\
+\alpha_{\frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega_{\tau \frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega^{2}_{\tau \frac{L}{2}} & ... & \alpha_{\frac{L}{2}} \Omega^{15}_{\tau \frac{L}{2}} & \alpha_{\frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & \alpha_{\frac{L}{2}} \Omega^{2}_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} & ... & \alpha_{\frac{L}{2}} \Omega^{15}_{\tau \frac{L}{2}} \Phi_{\theta \frac{L}{2}} \\
+\alpha_{(\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega_{\tau (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega^{2}_{\tau (\frac{L}{2} + 1)} & ... & \alpha_{(\frac{L}{2} + 1)} \Omega^{15}_{\tau (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & \alpha_{(\frac{L}{2} + 1)} \Omega^{2}_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} & ... & \alpha_{(\frac{L}{2} + 1)} \Omega^{15}_{\tau (\frac{L}{2} + 1)} \Phi_{\theta (\frac{L}{2} + 1)} \\
+\alpha_{(\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega_{\tau (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega^{2}_{\tau (\frac{L}{2} + 2)} & ... & \alpha_{(\frac{L}{2} + 2)} \Omega^{15}_{\tau (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & \alpha_{(\frac{L}{2} + 2)} \Omega^{2}_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} & ... & \alpha_{(\frac{L}{2} + 2)} \Omega^{15}_{\tau (\frac{L}{2} + 2)} \Phi_{\theta (\frac{L}{2} + 2)} \\
+. & . & . & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . & . & . \\
+. & . & . & . & . & . & . & . & . & . \\
+\alpha_{L} & \alpha_{L} \Omega_{\tau L} & \alpha_{L} \Omega^{2}_{\tau L} & ... & \alpha_{L} \Omega^{15}_{\tau L} & \alpha_{L} \Phi_{\theta L} & \alpha_{L} \Omega_{\tau L} \Phi_{\theta L} & \alpha_{L} \Omega^{2}_{\tau L} \Phi_{\theta L} & ... & \alpha_{L} \Omega^{15}_{\tau L} \Phi_{\theta L} \\
+\end{bmatrix}
+$
+
+%function steering_vector = compute_steering_vector(theta, tau, freq, sub_freq_delta, ant_dist)
+%    steering_vector = zeros(30, 1);
+%    k = 1;
+%    base_element = 1;
+%    for ii = 1:2
+%        for jj = 1:15
+%            steering_vector(k, 1) = base_element * omega_tof_phase(tau, sub_freq_delta)^(jj - 1);
+%            k = k + 1;
+%        end
+%        base_element = base_element * phi_aoa_phase(theta, freq, ant_dist);
+%    end
+%end
+\end{center}
+\end{figure}
+
+SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed normalized time of flight and normalized angle of arrival as two-dimensional coordinates. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions we used agglomerative clustering, which only takes qualitative cluster measurement parameters that can be determined prior to deployment. A cluster is selected as the correct choice using a weighted likelihood computed using: number of points per cluster, average angle of arrival for the cluster, average time of flight for the cluster, and mean time of flight. The idea behind this likelihood is that the cluster with the most points and the least variance (tightest clustering) should be selected since the direct signal path should have less variance in its measurements. To compute the weights for each of the likelihood terms we collected channel state information from a transmitter at several known positions in a room and then fed cluster information labeled with the correct cluster choice into a linear support vector machine \cite{SvmTutorialBurges1998}. \par
 
 The SpotFi system runs the modified version of MUSIC on multiple wireless access points and then combines the results from each to come up with a precise location. In our implementation however we are working from a single laptop, and so we do no such combination, relying upon the angle of arrival computed on our single receiver. \par
 
