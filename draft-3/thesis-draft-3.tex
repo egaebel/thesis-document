@@ -10,8 +10,11 @@
 
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{graphics}
 \usepackage{amsmath,amssymb}
 \usepackage{mathtools}
+\usepackage{caption}
+\usepackage{subcaption}
 
 \setlength{\textwidth}{6.5in}
 \setlength{\textheight}{8.5in}
@@ -482,13 +485,15 @@ $
 \end{center}
 \end{figure}
 
-SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed normalized time of flight and normalized angle of arrival as two-dimensional coordinates. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions we used agglomerative clustering, which only takes qualitative cluster measurement parameters that can be determined prior to deployment. A cluster is selected as the correct choice using a weighted likelihood computed using: number of points per cluster, average angle of arrival for the cluster, average time of flight for the cluster, and mean time of flight. The idea behind this likelihood is that the cluster with the most points and the least variance (tightest clustering) should be selected since the direct signal path should have less variance in its measurements. To compute the weights for each of the likelihood terms we collected channel state information from a transmitter at several known positions in a room and then fed cluster information labeled with the correct cluster choice into a linear support vector machine \cite{SvmTutorialBurges1998}. \par
+SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed normalized time of flight and normalized angle of arrival as two-dimensional coordinates. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions we used agglomerative clustering, which only takes qualitative cluster measurement parameters that can be determined prior to deployment. A cluster is selected as the correct choice using a weighted likelihood computed using: number of points per cluster, average angle of arrival for the cluster, average time of flight for the cluster, and mean time of flight. The idea behind this likelihood is that the cluster with the most points and the least variance (tightest clustering) should be selected since the direct signal path should have less variance in its measurements. \par
 
-The SpotFi system runs the modified version of MUSIC on multiple wireless access points and then combines the results from each to come up with a precise location. In our implementation however we are working from a single laptop, and so we do no such combination, relying upon the angle of arrival computed on our single receiver. \par
+To compute the weights for each of the likelihood terms we collected channel state information from an ASUS 5 GHz router by pinging it when it was at several known positions in a room and then fed cluster information labeled with the correct cluster choice into a linear support vector machine \cite{SvmTutorialBurges1998}. \par
 
-We find ourselves working in a constrained scenario in comparison to the SpotFi paper however. SpotFi is a general wireless localization technique designed to work in non-line of sight and line of sight scenarios. In our application we will always have a line of sight between the two users engaging in LGTM. Furthermore the distance between two users is expected to generally be quite small and SpotFi's localization performs better over shorter distances. These constraints make us confident that this adapted SpotFi will be suitable enough for a proof of concept of LGTM. To validate this claim we report localization accuracy results in the experiments section. \par
+The SpotFi system runs the modified version of MUSIC on multiple wireless access points and then combines the results from each to come up with a precise location. In our implementation however we are working from a single laptop, and so we do no such combination, relying upon the angle of arrival computed on our single receiver. This certainly decreases our localization accuracy in comparison to the original SpotFi system, however for this LGTM proof of concept I think that is acceptable. Furthermore, there are unique properties of LGTM that should mitigate localization errors. \par
 
-Since SpotFi is the most expensive operation in LGTM we performed some optimizations to improve performance. In SpotFi we compute the angle of arrival for each packet using the modified MUSIC algorithm, which is the most expensive part of the procedure. Since the packets are independent of one-another, we parallelize the entire packet processing loop and improve the overall performance significantly. \par
+We find ourselves working in a constrained scenario in comparison to the SpotFi paper however. SpotFi is a general wireless localization technique designed to work in non-line of sight and line of sight scenarios. In our application we will always have a line of sight between the two users engaging in LGTM. Furthermore the distance between two users is expected to generally be quite small and SpotFi's localization performs better over shorter distances \cite{SpotFiKotaru2015}. These constraints make us confident that this adapted SpotFi will be suitable enough for a proof of concept of LGTM. To validate this claim we report localization accuracy results in the experiments section. \par
+
+Since SpotFi is the most expensive operation in LGTM we performed some optimizations to improve performance. In SpotFi we compute the angle of arrival for each packet using the modified MUSIC algorithm, which is the most expensive part of the procedure. Since the packets are independent of one-another, we parallelize the entire packet processing loop and improve the overall performance significantly. The speed of our processing is thus heavily linked to the number of cores used in processing. Adding an additional core will result in a large speed up. \par
 
 We implement our altered SpotFi along with the altered MUSIC algorithm from scratch in MATLAB. To our knowledge there is no open-source implementation of SpotFi yet, so we also release the source code for our implementation of SpotFi and the entire LGTM implementation, making it available at: \url{www.github.com/egaebel/lgtm}. \par
 
@@ -514,33 +519,26 @@ We also briefly discuss our validation of OpenCV's LBPH facial recognizer since 
 
 \section{Wireless Localization -- SpotFi (FIX THIS TITLE HERE!! THIS ISN'T GREAT!)}
 \begin{table}
-\begin{center}
-\caption{Sampling data results}
-\label{sampling-data-table}
-\begin{tabular}{| c || c | c | c | c | c | c | c | c || c | c | c | c | c | c | c | c || c | c | c | c | c | c | c | c |}
-\hline
-Distances: &  &  &  &  & 1 m  &  &  &  &  &  &  &  & 2 m  &  &  &  &  &  &  &  & 3 m  &  &  &  \\
-\hline
-Number of Packets Used in SpotFi: & 1025 & 750 & 500 & 250 & 100 & 50 & 25 & 10 & 1025 & 750 & 500 & 250 & 100 & 50 & 25 & 10 & 1025 & 750 & 500 & 250 & 100 & 50 & 25 & 10 \\
-\hline
-\hline
-Correct in Top 1: & 47.0 \% & 47.0 \% & 49.0 \% & 47.0 \% & 51.0 \% & 49.0 \% & 58.0 \% & 60.0 \% & 27.0 \% & 27.0 \% & 25.0 \% & 25.0 \% & 23.0 \% & 20.0 \% & 27.0 \% & 30.0 \% & 24.0 \% & 24.0 \% & 22.0 \% & 20.0 \% & 20.0 \% & 19.0 \% & 24.0 \% & 23.0 \% \\
-\hline
-Correct in Top 2: & 77.0 \% & 77.0 \% & 77.0 \% & 80.0 \% & 81.0 \% & 82.0 \% & 88.0 \% & 83.0 \% & 41.0 \% & 41.0 \% & 40.0 \% & 45.0 \% & 42.0 \% & 46.0 \% & 50.0 \% & 47.0 \% & 36.0 \% & 36.0 \% & 36.0 \% & 35.0 \% & 34.0 \% & 35.0 \% & 33.0 \% & 38.0 \% \\
-\hline
-Correct in Top 3: & 90.0 \% & 90.0 \% & 90.0 \% & 90.0 \% & 94.0 \% & 90.0 \% & 95.0 \% & 95.0 \% & 66.0 \% & 66.0 \% & 63.0 \% & 65.0 \% & 68.0 \% & 67.0 \% & 65.0 \% & 65.0 \% & 48.0 \% & 48.0 \% & 45.0 \% & 44.0 \% & 43.0 \% & 42.0 \% & 42.0 \% & 45.0 \% \\
-\hline
-Correct in Top 4: & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 74.0 \% & 74.0 \% & 74.0 \% & 74.0 \% & 76.0 \% & 74.0 \% & 74.0 \% & 75.0 \% & 49.0 \% & 49.0 \% & 48.0 \% & 48.0 \% & 49.0 \% & 47.0 \% & 50.0 \% & 50.0 \% \\
-\hline
-Correct in Top 5: & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 74.0 \% & 74.0 \% & 74.0 \% & 76.0 \% & 76.0 \% & 74.0 \% & 74.0 \% & 75.0 \% & 49.0 \% & 49.0 \% & 49.0 \% & 50.0 \% & 51.0 \% & 49.0 \% & 50.0 \% & 50.0 \% \\
-\hline
-\hline
-Mean Error: & 0.838 m & 0.838 m & 0.829 m & 0.796 m & 0.768 m & 0.722 m & 0.790 m & 0.745 m & 1.543 m & 1.543 m & 1.487 m & 1.392 m & 1.565 m & 1.547 m & 1.484 m & 1.644 m & 2.374 m & 2.374 m & 2.405 m & 2.446 m & 2.444 m & 2.224 m & 2.477 m & 2.396 m \\
-\hline
-Median Error: & 0.803 m & 0.803 m & 0.789 m & 0.751 m & 0.703 m & 0.703 m & 0.757 m & 0.745 m & 1.282 m & 1.282 m & 1.213 m & 1.041 m & 1.278 m & 1.407 m & 1.233 m & 1.520 m & 2.368 m & 2.368 m & 2.289 m & 2.330 m & 2.367 m & 1.915 m & 2.739 m & 2.425 m \\
-\hline
-\end{tabular}
-\end{center}
+    \caption{Sampling data results}
+    \label{sampling-data-table}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \begin{center}
+            \scalebox{0.75}{\input{../figures/sampling-data-table--distance-1m.tex}}
+        \end{center}
+    \end{subfigure}
+    \par\bigskip
+    \begin{subfigure}[b]{0.3\textwidth}
+        \begin{center}
+            \scalebox{0.75}{\input{../figures/sampling-data-table--distance-2m.tex}}
+        \end{center}
+    \end{subfigure}
+    \par\bigskip
+    \begin{subfigure}[b]{0.3\textwidth}
+        \begin{center}
+            \scalebox{0.75}{\input{../figures/sampling-data-table--distance-3m.tex}}
+        \end{center}
+    \end{subfigure}
+    \par\bigskip
 \end{table}
 
 \subsection{Accuracy}
@@ -548,7 +546,7 @@ Localization accuracy is front and center in LGTM. We rely on wireless localizat
 
 To account for minor errors in angle of arrival computations we introduce a slight error tolerance of 40 cm $<I \: may \: make \: this \: smaller...>$ on either side of the face. Since we control the distance and angle between test devices in our experiment we use the error tolerance and distance to compute the tolerance for the angle in degrees. \par
 
-There are many lessons to gain from the data we collect for LGTM's localization. LGTM uses a likelihood technique to make the final selection of angle of arrival. This can lead to an incorrect angle of arrival being selected over the correct one, sometimes by a very slim margin. To evaluate LGTM's localization accuracy with this in mind we focus on the accuracy of the top-3 and top-5 angle of arrival selections as well as the mean error and median error. Top-3, top-5, mean error, and median error accuracy reports for distances of: 1 meter, 2 meters, and 3 meters and angles of -20, -10, 0, 10, and 20 degrees can be found in table $<INSERT TABLE REFERENCE>$. We see that localization accuracy is closely correlated with distance. \par
+There are many lessons to gain from the data we collect for LGTM's localization. LGTM uses a likelihood technique to make the final selection of angle of arrival. This can lead to an incorrect angle of arrival being selected over the correct one, sometimes by a very slim margin. To evaluate LGTM's localization accuracy with this in mind we focus on the accuracy of the top-5 angle of arrival selections as well as the mean error and median error.Top-5, mean error, and median error accuracy reports for distances of: 1 meter, 2 meters, and 3 meters and angles of -20, -10, 0, 10, and 20 degrees can be found in table $<INSERT TABLE REFERENCE>$. We see that localization accuracy is closely correlated with distance. \par
 
 \subsection{Performance}
 Wireless localization performance is primarily bounded by the number of packets whose channel state information is used in computing the angle of arrival with our modified SpotFi implementation. As mentioned in the implementation section we parallelize this since processing independent packets is an ``embarrassingly parallel'' problem. However we still incur high performance penalties at this step due to the large number of packets. We collect channel state information for the packets carrying the facial recognition parameters, which in our evaluation is actually just a tarred folder of photos which are used to train a facial recognition model. The number of packets to transmit this comes to approximately 1025 with minor variations due to slightly different image file sizes. Processing all these packets in the modified SpotFi takes up precious time, but using a large number of packets should intuitively provide better localization results. To see how the trade-off between localization accuracy and processing time when varying the number of packets considered we sample packets uniformly from the packet stream using sample sizes of: 750, 500, 250, 100, 50, 25, and 10. Our findings are presented in table $<INSERT TABLE REFERENCE>$. \par
