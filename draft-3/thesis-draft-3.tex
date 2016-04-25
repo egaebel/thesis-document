@@ -386,9 +386,7 @@ The key insights in SpotFi are using channel state information measurements from
 
 To understand this first insight I must briefly explain what subcarriers are. Many modern communications systems, including 802.11n, rely on a scheme called orthogonal frequency division multiplexing (OFDM). From a high level, OFDM divides up a band of frequency into separate channels and transmits different data using each channel. These separated channels are referred to as subcarriers since each have a carrier frequency which is a small part of a different central frequency which defines the section used for OFDM.  $<GET \: A \: GOOD \: FIGURE \: FOR \: THIS>$. \par
 
-To use these subcarriers first requires a modification to the model of a wireless signal presented in the original MUSIC paper. Instead of modeling $X$ as a column vector of $M$ measurements we model $X$ as an $M \times N$ matrix, where $N$ equals the number of subcarriers used. This results in the channel gain matrix $F$ being modeled as a $D \times N$ matrix and the noise matrix $W$ being modeled as a $M \times N$ matrix. The rewritten equation is below.
-
-$$X = AF + W$$
+To use these subcarriers first requires a modification to the model of a wireless signal presented in the original MUSIC paper. Instead of modeling $X$ as a column vector of $M$ measurements we model $X$ as an $M \times N$ matrix, where $N$ equals the number of subcarriers used. This results in the channel gain matrix $F$ being modeled as a $D \times N$ matrix and the noise matrix $W$ being modeled as a $M \times N$ matrix. \par
 
 Although the authors of SpotFi perform their manipulations on the expression, minus the noise matrix, $W$, for simplicity, so I will do the same for the remainder of my explanation of SpotFi. \par
 
@@ -427,6 +425,36 @@ We found it prudent to run a few experiments to validate our implementation laid
 We also briefly discuss our validation of OpenCV's LBPH facial recognizer since we are using it in a non-traditional scenario. Most research in facial recognition deals with a known dataset of photos and feeds these photos directly into the facial recognition algorithms, often with some preprocessing first. In LGTM we train on photos and test on faces captured via web cam in real-time. This introduces additional noise since the faces are not perfectly centered in the x, y, or z axes and there is inherent noise in picking up a printed out photo from a camera. For these reasons, we see fit to briefly mention our evaluation methodology and mention the performance timing for training, if only to leave the reader without a doubt of our system's abilities. \par
 
 \section{Wireless Localization -- SpotFi (FIX THIS TITLE HERE!! THIS ISN'T GREAT!)}
+\begin{table}
+\begin{center}
+\caption{Sampling data results}
+\label{sampling-data-table}
+\begin{tabular}{| c || c | c | c | c | c | c | c | c || c | c | c | c | c | c | c | c || c | c | c | c | c | c | c | c |}
+\hline
+Distances: &  &  &  &  & 1 m  &  &  &  &  &  &  &  & 2 m  &  &  &  &  &  &  &  & 3 m  &  &  &  \\
+\hline
+Number of Packets Used in SpotFi: & 1025 & 750 & 500 & 250 & 100 & 50 & 25 & 10 & 1025 & 750 & 500 & 250 & 100 & 50 & 25 & 10 & 1025 & 750 & 500 & 250 & 100 & 50 & 25 & 10 \\
+\hline
+\hline
+Correct in Top 1: & 47.0 \% & 47.0 \% & 49.0 \% & 47.0 \% & 51.0 \% & 49.0 \% & 58.0 \% & 60.0 \% & 27.0 \% & 27.0 \% & 25.0 \% & 25.0 \% & 23.0 \% & 20.0 \% & 27.0 \% & 30.0 \% & 24.0 \% & 24.0 \% & 22.0 \% & 20.0 \% & 20.0 \% & 19.0 \% & 24.0 \% & 23.0 \% \\
+\hline
+Correct in Top 2: & 77.0 \% & 77.0 \% & 77.0 \% & 80.0 \% & 81.0 \% & 82.0 \% & 88.0 \% & 83.0 \% & 41.0 \% & 41.0 \% & 40.0 \% & 45.0 \% & 42.0 \% & 46.0 \% & 50.0 \% & 47.0 \% & 36.0 \% & 36.0 \% & 36.0 \% & 35.0 \% & 34.0 \% & 35.0 \% & 33.0 \% & 38.0 \% \\
+\hline
+Correct in Top 3: & 90.0 \% & 90.0 \% & 90.0 \% & 90.0 \% & 94.0 \% & 90.0 \% & 95.0 \% & 95.0 \% & 66.0 \% & 66.0 \% & 63.0 \% & 65.0 \% & 68.0 \% & 67.0 \% & 65.0 \% & 65.0 \% & 48.0 \% & 48.0 \% & 45.0 \% & 44.0 \% & 43.0 \% & 42.0 \% & 42.0 \% & 45.0 \% \\
+\hline
+Correct in Top 4: & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 74.0 \% & 74.0 \% & 74.0 \% & 74.0 \% & 76.0 \% & 74.0 \% & 74.0 \% & 75.0 \% & 49.0 \% & 49.0 \% & 48.0 \% & 48.0 \% & 49.0 \% & 47.0 \% & 50.0 \% & 50.0 \% \\
+\hline
+Correct in Top 5: & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 100.0 \% & 74.0 \% & 74.0 \% & 74.0 \% & 76.0 \% & 76.0 \% & 74.0 \% & 74.0 \% & 75.0 \% & 49.0 \% & 49.0 \% & 49.0 \% & 50.0 \% & 51.0 \% & 49.0 \% & 50.0 \% & 50.0 \% \\
+\hline
+\hline
+Mean Error: & 0.838 m & 0.838 m & 0.829 m & 0.796 m & 0.768 m & 0.722 m & 0.790 m & 0.745 m & 1.543 m & 1.543 m & 1.487 m & 1.392 m & 1.565 m & 1.547 m & 1.484 m & 1.644 m & 2.374 m & 2.374 m & 2.405 m & 2.446 m & 2.444 m & 2.224 m & 2.477 m & 2.396 m \\
+\hline
+Median Error: & 0.803 m & 0.803 m & 0.789 m & 0.751 m & 0.703 m & 0.703 m & 0.757 m & 0.745 m & 1.282 m & 1.282 m & 1.213 m & 1.041 m & 1.278 m & 1.407 m & 1.233 m & 1.520 m & 2.368 m & 2.368 m & 2.289 m & 2.330 m & 2.367 m & 1.915 m & 2.739 m & 2.425 m \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
 \subsection{Accuracy}
 Localization accuracy is front and center in LGTM. We rely on wireless localization to provide us with guarantees about a transmitter's location which we then use to bootstrap authentication. We found that our system performs modestly in comparison to other localization works, albeit not up to the high standards that a secure system would require. This is the point where we remind the reader that this is a proof on concept and that we are further relying upon future localization techniques, such as \cite{ChronosSingleAPLocalizationVasisht2016}, to make LGTM airtight with respect to security. \par
 
