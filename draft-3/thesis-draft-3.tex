@@ -247,9 +247,6 @@ Using facial recognition parameters to aid in the user-selection problem does no
 
 Consider a small node with wireless capabilities hidden in a discrete location that is designed to exploit every opportunity to attack wireless protocols. This node will be unable to attack LGTM since it would have to obtain facial recognition parameters as well. Furthermore, LGTM is specifically designed so that such a node cannot begin LGTM with a user and obtain their facial recognition parameters for use later. Notice in \ref{figure: protocol-diagram} the user who initiates LGTM sends his or her facial recognition parameters and is authenticated first, meaning a malicious user cannot use LGTM to harvest other users' facial recognition parameters without providing valid ones themselves, along with a valid human face that matches them. This makes the spontaneous random attacker's task significantly more difficult. \par
 
-% TODO: Maybe I'll bring this back. Probably not though
-% By preventing spontaneous random attacks, LGTM frees the user from having their vision spammed during LGTM with numerous pop-ups for authentication, which have been identified in $[CITATION]$to transcend technological security into personal security since the user's vision might be obscured which is a safety hazard in many scenarios. This also ties back to usability since unwanted pop-ups are not a usability feature of any technology. \par
-
 The final step in the protocol is for the actual human users to select a face from the options LGTM provides. As mentioned before, humans are excellent at identifying other human faces. On top of this, humans are great at recognizing the difference between a mask and a true human face. Without the human verification step, LGTM could be fooled by an attacker wearing a mask. Human verification serves as a final check against spoofing attempts. On top of this, as stated before, a user may be unintentionally performing LGTM in concert with several users at once. At the end of the protocol, the user may have several faces left to select from, and so the user must select one face from several potential choices, solving the user-selection problem. In most cases, the selections will be very limited since the two users are expected to be facing one another and to have a very short time window to initiate the protocol. \par
 
 
@@ -677,7 +674,9 @@ There remains room to further improve LGTM by using more of the unique hardware 
 
 Of course, improved wireless localization accuracy will be a large contributor to improving LGTM. I fully expect the field to continue advancing the accuracy of wireless localization as it has over its entire existence. Indeed, since work on LGTM initially began, wireless localization has taken a huge step forward thanks to the works of Vasisht et al. in \cite{ChronosSingleAPLocalizationVasisht2016}, which describes a technique for performing decimeter level localization from a single access point with three antennas. \par
 
-% TODO: Facial recognition?
+More work on analyzing LGTM itself also remains to be done. I have referenced a great many usability studies in this thesis, it would be great to perform one to get empirical data on LGTM's usability. \par
+
+LGTM has been presented as a protocol to authenticate two users, but it can easily be expanded to include multiple users, however the exact method by which this should be done is not entirely clear. \par
 
 Finally, a great deal of work can be done to examine augmented reality attacks in general, particularly ones involving spamming a users' vision or tricking users into accepting something inadvertently. There has been a small body of work on this topic already \cite{SafelyAugmentLebeck2016,SecurityAndPrivacyForARRoesner2014}, but for a new computational paradigm we are going to need a lot more. \par
 
