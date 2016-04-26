@@ -520,10 +520,9 @@ Since MUSIC is a mathematical technique, the authors of SpotFi move $\Phi_{\thet
 
 % TODO: More detail
 
-See figure \ref{figure: spotfi-smoothing-explained} to see exactly how this manifests itself. This altered signal matrix is referred to as the smoothed channel state information matrix and this signal matrix can be said to have $30$ sensors total, which is achieved by creating all possible shifts of $15$ subcarriers between two antennas. Now that we have the new steering vector $a(\theta, \tau)$ and the smoothed channel state information matrix we can input this into the classical MUSIC algorithm, with minor modifications to account for both angle of arrival and time of flight. These minor modifications amount to simply plugging in different values for $\theta$ and $\tau$ in the expression $P_{MUSIC}(\theta, \tau) = \frac{1}{a^{H}(\theta, \tau) E_{N} E^{H}_{N} a(\theta, \tau)}$ instead of only plugging in different $\theta$ values. We search for peaks in the same way that we would with only $\theta$, except expanded to two-dimensions. \par
-
 \begin{figure}[!htb]
     \begin{center}
+        \caption{}
         \label{figure: spotfi-smoothing-explained}
         \begin{subfigure}[b]{0.3\textwidth}
             \caption{}
@@ -545,6 +544,8 @@ See figure \ref{figure: spotfi-smoothing-explained} to see exactly how this mani
         \par\bigskip
     \end{center}
 \end{figure}
+
+See figure \ref{figure: spotfi-smoothing-explained} to see exactly how this manifests itself. This altered signal matrix is referred to as the smoothed channel state information matrix and this signal matrix can be said to have $30$ sensors total, which is achieved by creating all possible shifts of $15$ subcarriers between two antennas. Now that we have the new steering vector $a(\theta, \tau)$ and the smoothed channel state information matrix we can input this into the classical MUSIC algorithm, with minor modifications to account for both angle of arrival and time of flight. These minor modifications amount to simply plugging in different values for $\theta$ and $\tau$ in the expression $P_{MUSIC}(\theta, \tau) = \frac{1}{a^{H}(\theta, \tau) E_{N} E^{H}_{N} a(\theta, \tau)}$ instead of only plugging in different $\theta$ values. We search for peaks in the same way that we would with only $\theta$, except expanded to two-dimensions. \par
 
 \begin{figure}[!htb]
     \begin{center}
