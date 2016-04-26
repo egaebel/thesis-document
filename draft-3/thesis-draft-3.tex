@@ -113,7 +113,12 @@ CNS-1443889, CNS-1405747, CNS-1446478, and CNS-1343222.
 
 % Dedication and Acknowledgments are both optional
 % \chapter*{Dedication}
-% \chapter*{Acknowledgments}
+%\chapter*{Acknowledgments}
+%I would like to thank all of my colleagues in the Complex Networks and Security Research Lab: Changlai Du, Wenhai Sun, Bing Wang, Ning Zhang, Ruide Zhang, Yao Zheng, Tao Jiang, and Divya Ramanujachari. They provided an extremely stimulating working environment as well as constant challenges to my ideas which were crucial to this thesis. \par
+
+%I would also like to thank my girlfriend, Jenny Jackson, for listening to me rant and rave about the wonders of augmented reality and for being a constant source of strength. \par
+
+%I'd like to thank my dad and finally I'd like to thank my mom, Linda Brown, for supporting me throughout my masters program, without her none of this would be possible. \par
 
 \tableofcontents
 \pagebreak
@@ -227,11 +232,11 @@ Otherwise, Alice retrieves facial recognition parameters that define a facial re
 
 Bob computes Alice's location using the wireless localization algorithm to get: $L_{B} = G(CSI_{B})$. Bob runs the facial recognition algorithm, using Alice's facial recognition parameters to obtain a location for any faces that match $F_{A}$, denoted by $FL_{B} = H(F_{A})$. Bob compares $L_{B}$ and $FL_{B}$ to see if the coordinates overlap. If they do not match, then they are thrown out. If there are no matches among all the options for $L_{B}$ and $FL_{B}$, then the protocol is aborted. If there are matches, then Bob has a box drawn around Alice's face, matched by $F_{A}$, and whose location, $FL_{B}$, overlaps with the corresponding $L_{B}$. Bob is prompted to verify that the protocol has selected the correct face. In practice, there may be many pairs of faces and locations to check at once since multiple users may be carrying out LGTM at the same time. In this case Bob selects Alice's face from the available faces, if it is present. If Bob fails to select Alice's face then the protocol aborts. Otherwise, the protocol has successfully completed, Alice and Bob have established a secure key $K$, and they have authenticated each other's wireless signals ensuring that they are communicating with who they think they are. They are now free to send encrypted content back and forth. \par
 
-\begin{figure}[!htb]
+\begin{figure}[!hp]
     \begin{center}
-        \caption{Protocol diagram.}
+        \caption{Protocol diagram of Alice and Bob's communications and computations during LGTM. Note that $H(\cdot)$ denotes a facial recognition algorithm, $G(\cdot)$ denotes a wireless localization algorithm, and $||$ denotes concatenation.}
         \label{figure: protocol-diagram}
-        \includegraphics[scale=0.4]{../figures/looks-good-to-me-protocol-diagram.pdf}
+        \includegraphics[scale=0.35]{../figures/looks-good-to-me-protocol-diagram.pdf}
     \end{center}
 \end{figure}
 
@@ -337,7 +342,7 @@ Furthermore, by sending data from point to point, we avoid empowering a central 
 \section{Testbed}
 Real world augmented reality headsets are still fresh on the market and are very rare. On top of this, the limited headsets on the market do not provide sufficient access to information about the wireless channel that is necessary for wireless localization. These two factors make implementing LGTM on real augmented reality headsets infeasible. \par
 
-However, we have stripped down LGTM's hardware and contextual requirements to the bare minimum leaving us in need of: a high-definition video camera, wireless point to point communication capabilities, wireless localization capabilities, a display, reasonable computational abilities, and close proximity of a face to wireless antennas. We satisfy all of these requirements by equipping two Fujitsu LifeBook T900 laptops running Linux Mint 17 Qiana with a Logitech C270 720p web cam, an Intel 5300 wireless card with custom firmware for Linux from Halperin et al. \cite{ChannelStateInformationToolReleaseHalperin2011} that enables retrieval of channel state information and point to point wireless communication using 802.11n, an array of three antennas affixed to the back of the laptop screen at 10 centimeter intervals, and finally by attaching printed pictures of faces from the Yalefaces dataset \cite{FisherfacesBelhumeur1997} to the back of the laptop over the antenna array. This last point is important since augmented reality headset users will have their face directly adjacent to the wireless transmitter which LGTM exploits to couple the wireless signal and the user together. This context is an extremely important enabler of LGTM. To be sure, our testbed itself is not a practical setup, but it perfectly emulates the requisite hardware of real augmented reality headsets. \par
+However, we have stripped down LGTM's hardware and contextual requirements to the bare minimum leaving us in need of: a high-definition video camera, wireless point to point communication capabilities, wireless localization capabilities, a display, reasonable computational abilities, and close proximity of a face to wireless antennas. We satisfy all of these requirements by equipping two Fujitsu LifeBook T900 laptops running Linux Mint 17 Qiana with a Logitech C270 720p web cam, an Intel 5300 wireless card with custom firmware for Linux from Halperin et al. \cite{ChannelStateInformationToolReleaseHalperin2011} that enables retrieval of channel state information and point to point wireless communication using 802.11n, an array of three antennas affixed to the back of the laptop screen at 10 centimeter intervals, and finally by attaching printed pictures of faces from the Yalefaces dataset \cite{FisherfacesBelhumeur1997} to the back of the laptop over the antenna array. This last point is important since augmented reality headset users will have their face directly adjacent to the wireless transmitter which LGTM exploits to couple the wireless signal and the user together. This context is an extremely important enabler of LGTM. A pair of images with the face photograph on and off is shown in figure \ref{figure: testbed-pictures}. To be sure, our testbed itself is not a practical setup, but it perfectly emulates the requisite hardware of real augmented reality headsets. \par
 
 \begin{figure}[!htb]
     \begin{center}
@@ -474,9 +479,9 @@ The key to MUSIC is the existence of a phase difference between each signal as i
 
 $$\Phi(\theta_{k}) = e^{Q * (-j 2 \pi d \frac{sin(\theta_{k}) f}{c})}$$
 
-where $j$ is $\sqrt{-1}$, $f$ is the wireless signal's frequency, $d$ is the distance between antennas in the array, $c$ is the speed of light, and $\theta_k$ is the angle of arrival for path $k$. The vector of these expressions is referred to as the steering vector, denoted $a(\theta)$, and is a function of $\theta$ since the remaining parameters are constant. \par
+where $j$ is $\sqrt{-1}$, $f$ is the wireless signal's frequency, $d$ is the distance between antennas in the array, $c$ is the speed of light, and $\theta_k$ is the angle of arrival for path $k$. The vector of these expressions is referred to as the steering vector, denoted $a(\theta)$ and seen in figure \ref{figure: music-steering-vector}. The steering vector is a function of $\theta$ since the remaining parameters are constant. \par
 
-\begin{figure}
+\begin{figure}[!htb]
     \begin{center}
         \caption{The steering vector form used in music. Each element indicates the phase offset from the first antenna in an array, which is why the first element is 1. Since the antennas in the array are spaced at a constant distance, $d$, the phase offset at each array element is a multiplicative increase.}
         \label{figure: music-steering-vector}
@@ -490,7 +495,7 @@ where $j$ is $\sqrt{-1}$, $f$ is the wireless signal's frequency, $d$ is the dis
     \end{center}
 \end{figure}
 
-The MUSIC paper models a received wireless signal, the column vector $X$ with $M$ elements, in terms of a matrix, $A$, with $D$ columns, each of which is a steering vector parameterized with a different $\theta$. The $D$ steering vectors are for the $D$ different signal paths resulting from multipath effects. Each of these steering vectors has $M$ elements, one for each antenna, making $A$ an $M \times D$ matrix. This matrix is multiplied by a column vector of $D$ complex gains, and this expression has Gaussian white noise added to it, denoted by $W$. All this is written as:
+The MUSIC paper models a received wireless signal, the column vector $X$ with $M$ elements, in terms of a matrix, $A$, with $L$ columns, each of which is a steering vector parameterized with a different $\theta$. The $L$ steering vectors are for the $L$ different signal paths resulting from multipath effects. Each of these steering vectors has $M$ elements, one for each antenna, making $A$ an $M \times L$ matrix. This matrix is multiplied by a column vector of $L$ complex gains, and this expression has Gaussian white noise added to it, denoted by $W$. All this is written as:
 
 $$X = AF + W$$
 
@@ -498,15 +503,15 @@ For the purpose of localization, we construct $A$ from the information we have a
 
 $$S = XX^{H} = A FF^{H} A^{*} + WW^{H}$$
 
-where $H$ denotes the conjugate transpose. This expression is decomposed using eigendecomposition so that we get: $S = A FF^{H} A^{H} + \lambda S_{0}$, where $S_{0}$ represents noise and $\lambda$ is an eigenvalue of $S$. When the elements of the noise vector $W$ have mean 0 and variance $\sigma^{2}$ $\lambda S_{0} = \sigma^{2} I$, where $I$ is the identity matrix. When the number of paths, $D$, is less than the number of sensors, or in our case antennas, $M$, then $A FF^{H} A^{H}$ is singular, making its determinant 0. This insight yields the expression:
+where $H$ denotes the conjugate transpose. This expression is decomposed using eigendecomposition so that we get: $S = A FF^{H} A^{H} + \lambda S_{0}$, where $S_{0}$ represents noise and $\lambda$ is an eigenvalue of $S$. When the elements of the noise vector $W$ have mean 0 and variance $\sigma^{2}$ $\lambda S_{0} = \sigma^{2} I$, where $I$ is the identity matrix. When the number of paths, $L$, is less than the number of sensors, or in our case antennas, $M$, then $A FF^{H} A^{H}$ is singular, making its determinant 0. This insight yields the expression:
 
 $$\lvert A FF^{H} A^{H} \rvert = \lvert S - \lambda S_{0} \rvert = 0$$
 
 If $A$ is a full rank matrix and $(FF^{H})$ is positive definite then $A FF^{H} A^{H}$ must be a positive semi-definite matrix, meaning that the $\lambda$ in the expression above must be the minimum eigenvalue $\lambda_{min} \geq 0$. \par
 
-The rank of $A FF^{H} A^{H}$ is $D$ and this can be shown by computing the eigenvalues of $S$, since $\lambda_{min}$ will be repeated $P = M - D$ times. Using this we can compute the number of paths, $D$, from measurements by determining $P$ by counting the number of times the minimum eigenvalue is repeated for $S$. \par
+The rank of $A FF^{H} A^{H}$ is $L$ and this can be shown by computing the eigenvalues of $S$, since $\lambda_{min}$ will be repeated $P = M - L$ times. Using this we can compute the number of paths, $L$, from measurements by determining $P$ by counting the number of times the minimum eigenvalue is repeated for $S$. \par
 
-Back to our steering vectors. Recall that there are $D$ actual angle of arrivals from multipath effects. When these true angle of arrivals are input to the steering vector, it will be orthogonal to what is referred to as the noise sub-space. MUSIC computes the noise sub-space by computing the eigenvectors of the signal covariance matrix and constructing a new matrix using the eigenvectors whose eigenvalues are at a minimum as columns. There are $P$ such eigenvectors. This matrix is denoted $E_{N}$. \par
+Back to our steering vectors. Recall that there are $L$ actual angle of arrivals from multipath effects. When these true angle of arrivals are input to the steering vector, it will be orthogonal to what is referred to as the noise sub-space. MUSIC computes the noise sub-space by computing the eigenvectors of the signal covariance matrix and constructing a new matrix using the eigenvectors whose eigenvalues are at a minimum as columns. There are $P$ such eigenvectors. This matrix is denoted $E_{N}$. \par
 
 To use MUSIC for computing the angle of arrival, we compute $P_{MUSIC}(\theta) = \frac{1}{a^{*}(\theta) E_{N} E_{N}^{*} a(\theta)}$ for a range of $\theta$ values and see where $P_{MUSIC}$ peaks. The largest peak is the direct path angle of arrival. \par
 
@@ -517,7 +522,7 @@ The key insights in SpotFi to overcome limitations from multipath and a limited 
 
 To understand this first insight, let's briefly look at subcarriers and how they're used. Many modern communications systems, including 802.11n, rely on orthogonal frequency division multiplexing (OFDM). From a high level, OFDM divides up a chunk of frequency into separate channels, referred to as sub-channels, and transmits data using each sub-channel. These sub-channels' central frequencies are referred to as subcarriers since each carrier frequency is a small part of a different central frequency which defines the chunk used by OFDM. OFDM selects subcarriers whose frequencies are closely spaced, but also orthogonal to minimize interference. The primary advantage of OFDM is its ability to cope with poor channel conditions \cite{80211MultipleAntennasDummiesHalperin2010,80211nStandard}. \par
 
-To use these subcarriers first requires a modification to the model of a wireless signal presented in the original MUSIC paper. Instead of modeling $X$ as a column vector of $M$ measurements, from $M$ antennas, we model $X$ as an $M \times N$ matrix, where $N$ equals the number of subcarriers used. This results in the channel gain matrix $F$ being modeled as a $D \times N$ matrix and the noise matrix $W$ being modeled as a $M \times N$ matrix. \par
+To use these subcarriers first requires a modification to the model of a wireless signal presented in the original MUSIC paper. Instead of modeling $X$ as a column vector of $M$ measurements, from $M$ antennas, we model $X$ as an $M \times N$ matrix, where $N$ equals the number of subcarriers used. This results in the channel gain matrix $F$ being modeled as a $L \times N$ matrix and the noise matrix $W$ being modeled as a $M \times N$ matrix. \par
 
 The authors of SpotFi perform their manipulations on the expression, minus the noise matrix, $W$, for simplicity, so I will do the same for the remainder of this explanation of SpotFi. \par
 
@@ -537,32 +542,46 @@ Since MUSIC is a mathematical technique, the authors of SpotFi move $\Phi_{\thet
 
 % TODO: More detail
 
-\begin{figure}[!htb]
+\begin{figure}%[!htb]
     \begin{center}
         \caption{The smoothed CSI matrix constructed in SpotFi and the matrices $A$ and $F$ which are specifically constructed to be compatible with MUSIC.}
         \label{figure: spotfi-smoothing-explained}
-        \begin{subfigure}[b]{0.3\textwidth}
-            \caption{Smoothed CSI matrix}
+        \begin{subfigure}[b]{0.75\textwidth}
+            \caption{Smoothed CSI matrix. The first index on the CSI terms refers to the antenna number while the second index on the CSI terms refers to the subcarrier number. Notice that the subcarrier count increased by both row and column until switching over to a new antenna.}
             \label{subfigure: smoothed-csi-matrix}
-            \centerline{\scalebox{0.5}{\input{../figures/smoothed-csi-matrix-explained.tex}}}
+            \centerline{\scalebox{0.95}{\input{../figures/smoothed-csi-matrix-explained.tex}}}
         \end{subfigure}
+    \end{center}
+\end{figure}
+\begin{figure}%[!htb]
+    \begin{center}
+        \ContinuedFloat
         \par\bigskip
-        \begin{subfigure}[b]{0.3\textwidth}
-            \caption{The steering matrix, each column is a steering vector parameterized with different $\theta$ and $\tau$.}
+        \begin{subfigure}[b]{0.75\textwidth}
+            \caption{The steering matrix, each column is a steering vector parameterized with different $\theta$ and $\tau$ and each of these steering vectors covers two antennas. }
             \label{subfigure: steering-matrix}
-            \centerline{\scalebox{0.5}{\input{../figures/steering-matrix-explained.tex}}}
+            \centerline{\scalebox{0.85}{\input{../figures/steering-matrix-explained.tex}}}
         \end{subfigure}
+    \end{center}
+\end{figure}
+\begin{figure}%[!htb]
+    \begin{center}
+        \ContinuedFloat
         \par\bigskip
-        \begin{subfigure}[b]{0.3\textwidth}
+        \begin{subfigure}[b]{0.75\textwidth}
             \caption{The matrix of complex gains. $\Phi_{\theta_{k}}$ and $\Omega(\tau_{k})$ terms have been moved into this matrix so that the matrix $A$ can be composed only of steering vectors. This mathematical trick is what allows SpotFi to utilize MUSIC to overcome multipath effects with only three antennas.}
             \label{subfigure: complex-gains-matrix}
-            \centerline{\scalebox{0.5}{\input{../figures/complex-gains-matrix-explained.tex}}}
+            \centerline{\scalebox{0.65}{\input{../figures/complex-gains-matrix-explained.tex}}}
         \end{subfigure}
         \par\bigskip
     \end{center}
 \end{figure}
 
 See figure \ref{figure: spotfi-smoothing-explained} to see exactly how this manifests itself. This altered signal matrix is referred to as the smoothed channel state information matrix, and can be said to have $30$ sensors total, which is achieved by creating all possible shifts of $15$ subcarriers between two antennas. Now that we have the new steering vector $a(\theta, \tau)$ and the smoothed channel state information matrix, we can input this into the classical MUSIC algorithm, with minor modifications to account for both angle of arrival and time of flight. These minor modifications amount to simply plugging in different values for $\theta$ and $\tau$ in the expression $P_{MUSIC}(\theta, \tau) = \frac{1}{a^{H}(\theta, \tau) E_{N} E^{H}_{N} a(\theta, \tau)}$ instead of only plugging in different $\theta$ values. We search for peaks in the same way that we would with only $\theta$, except expanded to two-dimensions. \par
+
+SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed normalized time of flight and normalized angle of arrival as two-dimensional coordinates. See figure \ref{figure: spotfi-clustering} for examples. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions, we used agglomerative clustering, which only takes qualitative cluster measurement parameters such as: the inner squared distance from point to cluster and the distance between the centers of clusters before the clusters are merged into one. These parameters can be easily determined prior to deployment. \par
+
+To determine these parameters I used collected channel state information from an ASUS 5 GHz router from pinging it when it was at several known locations. Afterwards I ran SpotFi on this data several times and tuned the clustering parameters until the clusters were of high quality. This tuning should hold across different deployments of LGTM since the time of flight and angle of arrival used in clustering are normalized. Therefore the distances are over normalized values which do not change, meaning the parameters defining a good cluster should remain constant across varying wireless conditions. \par
 
 \begin{figure}[!htb]
     \begin{center}
@@ -575,10 +594,6 @@ See figure \ref{figure: spotfi-smoothing-explained} to see exactly how this mani
         \includegraphics[width=0.4\textwidth]{../images/clustering-printer.png}
     \end{center}
 \end{figure}
-
-SpotFi runs the modified MUSIC algorithm for several packets and then clusters the results using each packet's computed normalized time of flight and normalized angle of arrival as two-dimensional coordinates. See figure \ref{figure: spotfi-clustering} for examples. The original SpotFi paper used Gaussian mean clustering to achieve this, which requires as input the expected number of clusters to generate, which equates to the number of multipath components. To make our implementation more robust to changing conditions, we used agglomerative clustering, which only takes qualitative cluster measurement parameters such as: the inner squared distance from point to cluster and the distance between the centers of clusters before the clusters are merged into one. These parameters can be easily determined prior to deployment. \par
-
-To determine these parameters I used collected channel state information from an ASUS 5 GHz router from pinging it when it was at several known locations. Afterwards I ran SpotFi on this data several times and tuned the clustering parameters until the clusters were of high quality. This tuning should hold across different deployments of LGTM since the time of flight and angle of arrival used in clustering are normalized. Therefore the distances are over normalized values which do not change, meaning the parameters defining a good cluster should remain constant across varying wireless conditions. \par
 
 A cluster is selected as the correct choice using a weighted likelihood computed using: number of points per cluster, average angle of arrival for the cluster, average time of flight for the cluster, and mean time of flight. 
 
@@ -598,14 +613,13 @@ Since SpotFi is the most expensive operation in LGTM, I performed some optimizat
 
 I implement the modified SpotFi and MUSIC algorithm from scratch in MATLAB. To my knowledge there is no open-source implementation of SpotFi yet, despite apparently high demand \cite{SpotFiCsiToolIssue2016}, so I am releasing the source code for my SpotFi implementation and the entire LGTM protocol implementation. It is available at: \url{www.github.com/egaebel/lgtm}. \par
 
-% TODO: Validation/testing on SpotFi
 
 \subsection{Bringing It All Together}
 The technologies described above are implemented in a combination of: C, C++, MATLAB, and Linux shell commands. To tie all this software together and construct a data pipeline for transmission, reception, processing, and user input, I use a Bash script to coordinate the flow of control. For passing state variables and data between separate programs, I use files for simplicity. The script first configures the wireless card to listen to the wireless channel for packets containing a special LGTM token and sets up a prompt for the user to initiate LGTM with a keystroke. When one user performs the keystroke on one of the testbed laptops a public key and random number are generated, concatenated together with an LGTM protocol string indicating it is the first message, and broadcast over the wireless channel. The LGTM protocol proceeds on autonomously as put forward in the protocol diagram in figure \ref{figure: protocol-diagram} with one important difference. Instead of sending a facial recognition model for each test device's assigned face, my implementation transmits a folder of images from the Yalefaces dataset, which is tarred (using the tar program) into an archive file. This folder contains a training set which is used by the recipient to train a facial recognition model. I found this method to be more efficient in terms of network usage since OpenCV's facial recognition models are very, very large. After both devices have received the images in the training set along with the channel state information associated with those packets, my modified version of SpotFi is run, and LGTM trains an LBPH facial recognition model using the training set. Now we have reached the human verification step. At this point, a window pops up displaying the real-time stream from the web cam attached to the laptop. Rendered atop the stream is a box around the recognized face (if there is one) and text below the box prompting the user to press space to confirm the face. This is shown in figure \ref{figure: lgtm-confirmation}. If both users press space then LGTM is a success; otherwise, the two users may press escape to terminate LGTM. \par
 
 \begin{figure}[!htb]
     \begin{center}
-        \caption{LGTM's display}
+        \caption{The final view for a user about to complete the human verification stage of LGTM on our testbed. This view is through the web cam of another test laptop with annotations placed around the recognized face and degrees drawn on the horizontal access for debugging purposes. The user is prompted to hit space to confirm that the correct face has been selected.}
         \label{figure: lgtm-confirmation}
         \includegraphics[scale=0.5]{../images/lgtm-confirmation.png}
     \end{center}
@@ -630,42 +644,19 @@ I found it prudent to run a few experiments to validate my implementation laid o
 
 I also briefly discuss my validation of OpenCV's LBPH facial recognizer since it's being used in a non-traditional scenario. Most research in facial recognition deals with a known dataset of photos and feeds these photos directly into the facial recognition algorithms, often with some preprocessing first. LGTM trains on photos and tests on faces captured via web cam in real-time. This introduces additional noise since the faces are not perfectly centered in the x, y, or z axes and there is inherent noise in picking up a printed photo from a camera. For these reasons, it is fitting to briefly mention my evaluation methodology and mention the performance timing for training, if only to leave the reader without a doubt of the system's abilities. \par
 
-\section{Wireless Localization}
-\begin{table}
-    \begin{center}
-        \caption{Base data results.}
-        \label{table: base-data-table}
-        \input{../figures/base-data-table--1m-2m-3m.tex}        
-    \end{center}
-\end{table}
-
-\begin{table}
-    \caption{Sampling data results.}
-    \label{table: sampling-data-table}
-    \begin{subfigure}[b]{0.3\textwidth}
-        \begin{center}
-            \scalebox{0.75}{\input{../figures/sampling-data-table--distance-1m.tex}}
-        \end{center}
-    \end{subfigure}
-    \par\bigskip
-    \begin{subfigure}[b]{0.3\textwidth}
-        \begin{center}
-            \scalebox{0.75}{\input{../figures/sampling-data-table--distance-2m.tex}}
-        \end{center}
-    \end{subfigure}
-    \par\bigskip
-    \begin{subfigure}[b]{0.3\textwidth}
-        \begin{center}
-            \scalebox{0.75}{\input{../figures/sampling-data-table--distance-3m.tex}}
-        \end{center}
-    \end{subfigure}
-    \par\bigskip
-\end{table}
-
 \subsection{Accuracy}
 Localization accuracy is front and center in LGTM. LGTM relies on wireless localization to provide guarantees about a transmitter's location, which is then used to bootstrap authentication. I found that my system performs modestly in comparison to other localization works, albeit not up to the high standards that a secure system would require. \par
 
 To account for acceptable errors in angle of arrival computations, I introduce a slight error tolerance of 40 cm on either side of the face. Since I control the distance and angle between test devices in the experiment, I use the error tolerance and distance to compute the tolerance for the angle in degrees. \par
+
+\section{Wireless Localization}
+\begin{table}
+    \begin{center}
+        \caption{Modified SpotFi localization results. Percent correct for the top 1 through 5 positions are reported along with mean error and median error.}
+        \label{table: base-data-table}
+        \input{../figures/base-data-table--1m-2m-3m.tex}        
+    \end{center}
+\end{table}
 
 There are many lessons to gain from the data collected for LGTM's localization. LGTM uses a likelihood technique to make the final selection of angle of arrival. This can lead to an incorrect angle of arrival being selected over the correct one, sometimes by a very slim margin. To evaluate LGTM's localization accuracy with this in mind, I focus on the accuracy of the top-5 angle of arrival selections as well as the mean error and median error. Top-5, mean error, and median error accuracy reports for distances of: 1 meter, 2 meters, and 3 meters are in table \ref{table: base-data-table}. The data used was gathered with the two testbed laptops at angles of: -20, -10, 0, 10, and 20 degrees, where 0 degrees is when the laptops are directly facing one another, +10 degrees indicates that one laptop is 10 degrees to the right of center and -10 degrees indicates that one laptop is 10 degrees left of center. The +/- 20 degree cases are the same as the +/- 10 degree cases. For each angle, I performed LGTM 10 times and saved off the channel state information used on each laptop. So this yields 20 samples for each angle at each distance and a total of 200 samples for each distance. There was not a significant difference in localization accuracy across angles, so I omit the data describing those cases specifically from this write-up. \par 
 
@@ -673,7 +664,59 @@ As expected, localization accuracy is strongly coupled with the distance between
 % TODO!!! MORE DISCUSSION!!!
 
 \subsection{Performance}
-Wireless localization performance is primarily bounded by the number of packets whose channel state information are used in computing the angle of arrival with the modified SpotFi implementation. As mentioned in the implementation section, I parallelize this since processing independent packets is an ``embarrassingly parallel'' problem. However, LGTM still incurs high performance penalties at this step due to the large number of packets. LGTM collects channel state information for the packets carrying the facial recognition parameters, which in this evaluation is actually just a tarred folder of photos which are used to train a facial recognition model. The number of packets to transmit this comes to approximately 1025 with minor variations due to slightly different image file sizes. Processing all these packets in the modified SpotFi takes up precious time, but using a large number of packets should intuitively provide better localization results. To examine the trade-off between localization accuracy and processing time I sampled different numbers of packets uniformly from the packet stream. Sampling sizes of 750, 500, 250, 100, 50, 25, and 10 were used. I used the same number of trials as in the non-sampling accuracy results, 200 measurements for each distance. My findings relating to sampling's affect on accuracy are presented in table \ref{table: sampling-data-table} in comparison to the baseline localization results with no sampling. My performance timings are presented in table \ref{} in comparison to baseline performance timing with no sampling. \par
+Wireless localization performance is primarily bounded by the number of packets whose channel state information are used in computing the angle of arrival with the modified SpotFi implementation. As mentioned in the implementation section, I parallelize this since processing independent packets is an ``embarrassingly parallel'' problem. However, LGTM still incurs high performance penalties at this step due to the large number of packets. LGTM collects channel state information for the packets carrying the facial recognition parameters, which in this evaluation is actually just a tarred folder of photos which are used to train a facial recognition model. The number of packets to transmit this comes to approximately 1025 with minor variations due to slightly different image file sizes. Processing all these packets in the modified SpotFi takes up precious time, but using a large number of packets should intuitively provide better localization results. To examine the trade-off between localization accuracy and processing time I sampled different numbers of packets uniformly from the packet stream. Sampling sizes of 750, 500, 250, 100, 50, 25, and 10 were used. I used the same number of trials as in the non-sampling accuracy results, 200 measurements for each distance. My findings relating to sampling's affect on accuracy are presented in table \ref{table: sampling-data-table} in comparison to the baseline localization results with no sampling. My performance timings are presented in table \ref{table: sampling-timing-data} in comparison to baseline performance timing with no sampling. \par
+
+\begin{table}[!htb]
+    \begin{center}
+        \caption{Timing results for wireless localization for different numbers of packets.}
+        \label{table: sampling-timing-data}
+        \begin{tabular}{| c | c |}
+            \hline
+            Number of Packets & Time to Run Localization (in seconds) \\
+            \hline
+            \hline
+            1025 & 893.189 \\
+            \hline
+            750 & 836.779 \\
+            \hline
+            500 & 391.03 \\
+            \hline
+            250 & 195.997 \\
+            \hline
+            100 & 78.1749 \\
+            \hline
+            50 & 39.68 \\
+            \hline
+            25 & 19.6615 \\
+            \hline
+            10 & 8.57495 \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{table}[p]
+    \caption{Results from the modified SpotFi localization technique when different numbers of packets are used. This was intended to examine the trade-off between performance and localization that would occur from decreasing the number of packets used, but instead I observed greater localization accuracy.}
+    \label{table: sampling-data-table}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \begin{center}
+            \scalebox{0.7}{\input{../figures/sampling-data-table--distance-1m.tex}}
+        \end{center}
+    \end{subfigure}
+    \par\bigskip
+    \begin{subfigure}[b]{0.3\textwidth}
+        \begin{center}
+            \scalebox{0.7}{\input{../figures/sampling-data-table--distance-2m.tex}}
+        \end{center}
+    \end{subfigure}
+    \par\bigskip
+    \begin{subfigure}[b]{0.3\textwidth}
+        \begin{center}
+            \scalebox{0.7}{\input{../figures/sampling-data-table--distance-3m.tex}}
+        \end{center}
+    \end{subfigure}
+    \par\bigskip
+\end{table}
 
 Here I found something very surprising, reducing the number of packets increases localization accuracy. This might be caused by the presence of bursty noise which occurs in large chunks and throws off the clustering step in SpotFi, but that is simply speculation at this point. Regardless of what is causing this unexpected effect, I can certainly say that it is very positive. What I expected to be a trade-off between computation time and localization accuracy turned into an increase for both, a most pleasant surprise! \par
 
@@ -684,15 +727,15 @@ Most of each subject's set of photos contained one photo of the subject wearing 
 
 For evaluating facial recognition accuracy, I train on all images of one subject except one, the ``happy'' photo in each subject's set of photos. I then test recognition on this one omitted photo. Using this methodology, I was able to train an LBPH facial recognition model to accurately recognize every single subject in the Yalefaces dataset. \par
 
-Facial recognition is not a performance bottleneck at all. My implementation trains a new classifier using the training photos on each run and it takes less than one second $[GET \: SOME \: REAL \: TIMES \: FOR \: THIS....they \: can \: be \: rough]$. Recognition itself is virtually instant; there is no noticeable lag time. \par
+Facial recognition is not a performance bottleneck at all. My implementation trains a new classifier using the training photos on each run and it takes less than one second. Recognition itself is virtually instant; there is no noticeable lag time. \par
 
 % TODO: WORKSHOP
 I can safely say, just from our cursory validation experiments on LBPH facial recognition for use-cases fitting LGTM that facial recognition is an efficient and accurate part of the whole LGTM system. \par
 
 
 % TODO: Workshop this section or flat-out remove it
-\section{Full System Timing (BETTER TITLE)}
-Overall, my implementation of LGTM takes $<INSERT \: TIME \: TO \: RUN>$ seconds to run. On top of this, consider that there are various less than ideal procedures that I used to workaround various issues, and this timing is very good for a device pairing procedure. \par
+%\section{Full System Timing (BETTER TITLE)}
+%Overall, my implementation of LGTM takes $<INSERT \: TIME \: TO \: RUN>$ seconds to run. On top of this, consider that there are various less than ideal procedures that I used to workaround various issues, and this timing is very good for a device pairing procedure. \par
 
 \chapter{Conclusion}
 \section{Future Work on LGTM}
