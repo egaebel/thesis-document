@@ -246,6 +246,9 @@ LGTM uses several techniques to achieve user authentication. As a result, it's c
 \subsection{Public Key Cryptography}
 LGTM uses Diffie-Hellman key exchange \cite{DiffieHellman2006} for establishing a shared key between Alice and Bob. Using Diffie-Hellman provides fast public-private key pair generation, even more so if elliptic curve Diffie-Hellman is used. High-speed key generation makes it feasible to generate a new key pair every time pairing is performed. This provides LGTM with perfect forward secrecy, meaning that if an attacker obtains one of the private keys used in a single pairing the other public-private key pairs along with the symmetric keys derived from them remain secure. \par
 
+\subsection{Symmetric Encryption}
+LGTM uses symmetric key encryption to protect the confidentiality of the facial recognition parameters. These parameters are not necessarily private, but they are not easily obtainable by arbitrary individuals, so encrypting them provides protection from such attackers that do not have easy access. Furthermore, encryption serves as a form of authentication so that Alice and Bob can properly keep track of the potentially many message streams from LGTM being performed between multiple parties in the same area at once. \par
+
 \subsection{Session Identifier}
 In practice Alice and Bob may be receiving several messages at once since it is not apparent which wireless signals can be ignored and which one should be focused on until the protocol is complete. To differentiate between wireless signals, Alice and Bob use the random numbers, $R_{A1}$ and $R_{B1}$, and combine them using the exclusive-or operation to generate a unique session key. Using this session key, Alice and Bob can quickly determine which stream of messages an incoming message belongs to, but this session key does not have security guarantees; it is only used for message routing in non-malicious scenarios. \par
 
@@ -717,6 +720,8 @@ Wireless localization performance is primarily bounded by the number of packets 
 \end{table}
 
 Here I found something very surprising, reducing the number of packets increases localization accuracy. This might be caused by the presence of bursty noise which occurs in large chunks and throws off the clustering step in SpotFi, but that is simply speculation at this point. Regardless of what is causing this unexpected effect, I can certainly say that it is very positive. What I expected to be a trade-off between computation time and localization accuracy turned into an increase for both, a most pleasant surprise! \par
+
+Since the modified SpotFi procedure dominates LGTM's time the timings given in \ref{table: sampling-timing-data} essentially represent how long LGTM takes to run. From learning that sampling fewer packets is not a trade-off, but a trade-up in every fashion I can say that SpotFi's performance is absolutely competitive with the fastest pairing methods. \par
 
 \section{Facial Recognition}
 In deploying facial recognition in LGTM, I utilized the famous Yalefaces \cite{FisherfacesBelhumeur1997} dataset as a source of face photos. This dataset is not large, it includes photos of 15 subjects with 12 photos per subject. This should match the consumer use-case for LGTM quite well, since most users are not going to be willing to take many photos to train a facial recognition model. \par
