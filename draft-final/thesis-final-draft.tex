@@ -93,7 +93,7 @@ Ethan D. Gaebel
 
 \vfill
 
-(ABSTRACT)
+ABSTRACT (Academic)
 
 Augmented reality is poised to become the next dominant computing paradigm over the course of the next decade. With the three-dimensional graphics and interactive interfaces that augmented reality promises it will rival the very best science fiction novels. Users will want to have shared experiences in these rich augmented reality scenarios, but surely users will want to restrict who can see their content. It is currently unclear how users of such devices will authenticate one another. Traditional authentication protocols reliant on centralized authorities fall short when different systems with different authorities try to communicate and extra infrastructure means extra resource expenditure. Augmented reality content sharing will usually occur in face-to-face scenarios where it will be advantageous for both performance and usability reasons to keep communications and authentication localized. Looks Good To Me (LGTM) is an authentication protocol for augmented reality headsets that leverages the unique hardware and context provided with augmented reality headsets to solve an old problem in a more usable and more secure way. LGTM works over point to point wireless communications so users can authenticate one another in any circumstance and is designed with usability at its core, requiring users to perform only two actions: one to initiate and one to confirm. LGTM allows users to intuitively authenticate one another, using seemingly only each other's faces. Under the hood LGTM uses a combination of facial recognition and wireless localization to ensure secure and extremely simple authentication.
 
@@ -101,7 +101,28 @@ Augmented reality is poised to become the next dominant computing paradigm over 
 
 \end{center}
 
+\begin{center}
+
+{\large Looks Good to Me: 
+Authentication for Augmented Reality}
+
 \vfill
+
+Ethan D. Gaebel
+
+\vfill
+
+ABSTRACT (Public)
+
+Augmented reality is poised to become the next dominant computing paradigm over the course of the next decade. With the three-dimensional graphics and interactive interfaces that augmented reality promises it will rival the very best science fiction novels. People will want to share their experiences in these rich augmented reality scenarios with others, but they will surely want to restrict who they are sharing with. It is currently unclear how users of such devices will authenticate one another to enable permissive content sharing. Augmented reality content sharing will usually occur in face-to-face scenarios where it will be advantageous for both performance and usability reasons to keep communications and authentication localized. Looks Good To Me (LGTM) is an authentication protocol for augmented reality headsets that leverages the unique hardware and context provided with augmented reality headsets to solve an old problem in a more usable and more secure way. LGTM works directly from one device to another using wireless communications so users can authenticate one another in any circumstance and is designed with usability at its core, requiring users to perform only two actions: one to initiate and one to confirm. LGTM allows users to intuitively authenticate one another, using seemingly only each other's faces. Under the hood LGTM uses a combination of facial recognition and wireless localization to ensure secure and extremely simple authentication. LGTM ensures that users will use authentication by making it so easy that they won't even notice they're using it.
+
+\vfill
+
+\end{center}
+
+\vfill
+
+\pagebreak
 
 % GRANT INFORMATION
 This work was supported in part by the National Science Foundation under Grants 
@@ -251,9 +272,9 @@ Bob computes Alice's location using the wireless localization algorithm to get: 
 
 \begin{figure}[!h]
     \begin{center}
-        \includegraphics[scale=0.4]{../figures/looks-good-to-me-protocol-diagram--wide.pdf}
         \caption{Protocol diagram of Alice and Bob's communications and computations during LGTM. Note that $H(\cdot)$ denotes a facial recognition algorithm, $G(\cdot)$ denotes a wireless localization algorithm, and $||$ denotes concatenation.}
         \label{figure: protocol-diagram}
+        \includegraphics[scale=0.4]{../figures/looks-good-to-me-protocol-diagram--wide.pdf}
     \end{center}
 \end{figure}
 
@@ -672,9 +693,9 @@ Localization accuracy is front and center in LGTM. LGTM relies on wireless local
 
 To account for acceptable errors in angle of arrival computations, I introduce a slight error tolerance of 40 cm on either side of the face. Since I control the distance and angle between test devices in the experiment, I use the error tolerance and distance to compute the tolerance for the angle in degrees. \par
 
-\begin{table}
+\begin{table}[h]
     \begin{center}
-        \caption{Modified SpotFi localization results. Percent correct for the top 1 through 5 positions are reported along with mean error and median error.}
+        \caption{Modified SpotFi localization results using 1025 packets for each localization sample. Percent correct for the top 1 through 5 positions are reported along with mean error and median error.}
         \label{table: base-data-table}
         \input{../figures/base-data-table--1m-2m-3m.tex}        
     \end{center}
@@ -684,9 +705,9 @@ There are many lessons to gain from the data collected for LGTM's localization. 
 
 As expected, localization accuracy is strongly coupled with the distance between devices. Percent correct in the top-1 position is almost halved when moving from 1 meter to 2 meters and beyond 2 meters the percent correct in the top-5 drops below 50\%. However, the results at all three distances are inadequate for security applications. Luckily, there are some good, and surprising, results that significantly improve this. Over the course of running my performance experiments I discovered that using fewer packets resulted in better localization accuracy. The full results of the sampling experiments are in \ref{table: sampling-data-table} but a shortened result with the best results, achieved with only 10 packets, are shown in table \ref{table: base-data-table--10-packets}. \par
 
-\begin{table}
+\begin{table}[h]
     \begin{center}
-        \caption{Modified SpotFi localization results. Percent correct for the top 1 through 5 positions are reported along with mean error and median error for distances of: 1 m, 2 m, and 3 m.}
+        \caption{Modified SpotFi localization results using 10 packets for each localization sample. Percent correct for the top 1 through 5 positions are reported along with mean error and median error for distances of: 1 m, 2 m, and 3 m.}
         \label{table: base-data-table--10-packets}
         \input{../figures/esorics-base-data-table--1m-2m-3m.tex}        
     \end{center}
